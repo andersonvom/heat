@@ -12,6 +12,15 @@
 #    under the License.
 
 import copy
+import os
+import psutil
+import shlex
+import subprocess
+import tempfile
+
+from Crypto.PublicKey import RSA
+
+from oslo.config import cfg
 
 from heat.common import exception
 from heat.common.i18n import _
@@ -20,6 +29,7 @@ from heat.engine import attributes
 from heat.engine import properties
 from heat.engine.resources import server
 from heat.openstack.common import log as logging
+
 
 try:
     import pyrax  # noqa
@@ -32,6 +42,73 @@ LOG = logging.getLogger(__name__)
 
 class CloudServer(server.Server):
     """Resource for Rackspace Cloud Servers."""
+
+    SCRIPT_INSTALL_REQUIREMENTS = {
+        'ubuntu': """
+apt-get update
+export DEBIAN_FRONTEND=noninteractive
+apt-get install -y -o Dpkg::Options::="--force-confdef" -o \
+  Dpkg::Options::="--force-confold" python-boto python-pip gcc python-dev
+pip install pbr==0.5.21
+pip install heat-cfntools
+cfn-create-aws-symlinks --source /usr/local/bin
+""",
+        'fedora': """
+yum install -y python-boto python-pip gcc python-devel
+pip-python install pbr==0.5.21
+pip-python install heat-cfntools
+cfn-create-aws-symlinks
+""",
+        'centos': """
+if ! (yum repolist 2> /dev/null | egrep -q "^[\!\*]?epel ");
+then
+ rpm -ivh http://mirror.rackspace.com/epel/6/i386/epel-release-6-8.noarch.rpm
+fi
+yum install -y python-boto python-pip gcc python-devel python-argparse
+pip-python install pbr==0.5.21
+pip-python install heat-cfntools
+""",
+        'rhel': """
+if ! (yum repolist 2> /dev/null | egrep -q "^[\!\*]?epel ");
+then
+ rpm -ivh http://mirror.rackspace.com/epel/6/i386/epel-release-6-8.noarch.rpm
+fi
+# The RPM DB stays locked for a few secs
+while fuser /var/lib/rpm/*; do sleep 1; done
+yum install -y python-boto python-pip gcc python-devel python-argparse
+pip-python install pbr==0.5.21
+pip-python install heat-cfntools
+cfn-create-aws-symlinks
+""",
+        'debian': """
+echo "deb http://mirror.rackspace.com/debian wheezy-backports main" >> \
+  /etc/apt/sources.list
+apt-get update
+apt-get -t wheezy-backports install -y cloud-init
+export DEBIAN_FRONTEND=noninteractive
+apt-get install -y -o Dpkg::Options::="--force-confdef" -o \
+  Dpkg::Options::="--force-confold" python-pip gcc python-dev
+pip install pbr==0.5.21
+pip install heat-cfntools
+"""}
+
+    SCRIPT_CREATE_DATA_SOURCE = """
+sed -i 's/ConfigDrive/NoCloud/' /etc/cloud/cloud.cfg.d/*
+rm -rf /var/lib/cloud
+mkdir -p /var/lib/cloud/seed/nocloud-net
+mv /tmp/userdata /var/lib/cloud/seed/nocloud-net/user-data
+touch /var/lib/cloud/seed/nocloud-net/meta-data
+chmod 600 /var/lib/cloud/seed/nocloud-net/*
+"""
+
+    SCRIPT_RUN_CLOUD_INIT = """
+cloud-init start || cloud-init init
+"""
+
+    SCRIPT_RUN_CFN_USERDATA = """
+bash -x /var/lib/cloud/data/cfn-userdata > /root/cfn-userdata.log 2>&1 ||
+  exit 42
+"""
 
     # Managed Cloud automation statuses
     MC_STATUS_IN_PROGRESS = 'In Progress'
@@ -86,11 +163,14 @@ class CloudServer(server.Server):
 
     def __init__(self, name, json_snippet, stack):
         super(CloudServer, self).__init__(name, json_snippet, stack)
+        self.stack = stack
         self._server = None
         self._distro = None
         self._image = None
+        self._retry_iterations = 0
         self._managed_cloud_started_event_sent = False
         self._rack_connect_started_event_sent = False
+        self._proc = None
 
     @property
     def server(self):
@@ -109,6 +189,28 @@ class CloudServer(server.Server):
         return self._distro
 
     @property
+    def script(self):
+        """
+        Return the config script for the Cloud Server image.
+
+        The config script performs the following steps:
+        1) Install cloud-init
+        2) Create cloud-init data source
+        3) Run cloud-init
+        4) If user_data_format is 'HEAT_CFNTOOLS', run cfn-userdata script
+        """
+        if self.distro not in self.SCRIPT_INSTALL_REQUIREMENTS:
+            return
+        base_script = (self.SCRIPT_INSTALL_REQUIREMENTS[self.distro] +
+                       self.SCRIPT_CREATE_DATA_SOURCE +
+                       self.SCRIPT_RUN_CLOUD_INIT)
+        userdata_format = self.properties.get(self.USER_DATA_FORMAT)
+        if userdata_format == 'HEAT_CFNTOOLS':
+            return base_script + self.SCRIPT_RUN_CFN_USERDATA
+        elif userdata_format == 'RAW':
+            return base_script
+
+    @property
     def image(self):
         """Return the server's image ID."""
         image = self.properties.get(self.IMAGE)
@@ -116,13 +218,91 @@ class CloudServer(server.Server):
             self._image = self.client_plugin('glance').get_image_id(image)
         return self._image
 
-    def _config_drive(self):
+    @property
+    def private_key(self):
+        """Return the private SSH key for the resource."""
+        return self.data().get('private_key')
+
+    @private_key.setter
+    def private_key(self, private_key):
+        """Save the resource's private SSH key to the database."""
+        if self.id is not None:
+            self.data_set('private_key', private_key, True)
+
+    @property
+    def has_userdata(self):
+        """Return True if the server has user_data, False otherwise."""
         user_data = self.properties.get(self.USER_DATA)
-        config_drive = self.properties.get(self.CONFIG_DRIVE)
-        if user_data or config_drive:
+        if user_data or self.metadata_get() != {}:
             return True
         else:
             return False
+
+    def validate(self):
+        """Validate user parameters."""
+        image = self.properties.get(self.IMAGE)
+
+        # It's okay if there's no script, as long as user_data and
+        # metadata are both empty
+        if image and self.script is None and self.has_userdata:
+            msg = _("user_data is not supported for image %s.") % image
+            raise exception.StackValidationFailed(message=msg)
+
+        # Validate that the personality does not contain a reserved
+        # key and that the number of personalities does not exceed the
+        # Rackspace limit.
+        personality = self.properties.get(self.PERSONALITY)
+        if personality:
+            limits = self.client_plugin().absolute_limits()
+
+            # One personality will be used for an SSH key
+            personality_limit = limits['maxPersonality'] - 1
+
+            if "/root/.ssh/authorized_keys" in personality:
+                msg = _('The personality property may not contain a key '
+                        'of "/root/.ssh/authorized_keys"')
+                raise exception.StackValidationFailed(message=msg)
+
+            elif len(personality) > personality_limit:
+                msg = _("The personality property may not contain greater "
+                        "than %s entries.") % personality_limit
+                raise exception.StackValidationFailed(message=msg)
+
+        super(CloudServer, self).validate()
+
+        # Validate that user_data is passed for servers with bootable
+        # volumes AFTER validating that the server has either an image
+        # or a bootable volume in Server.validate()
+        if not image and self.has_userdata:
+            msg = _("user_data scripts are not supported with bootable "
+                    "volumes.")
+            raise exception.StackValidationFailed(message=msg)
+
+    def _personality(self):
+        # Generate SSH public/private keypair for the engine to use
+        if self.private_key is not None:
+            rsa = RSA.importKey(self.private_key)
+        else:
+            rsa = RSA.generate(1024)
+        self.private_key = rsa.exportKey()
+        public_keys = [rsa.publickey().exportKey('OpenSSH')]
+
+        # Add the user-provided key_name to the authorized_keys file
+        key_name = self.properties.get(self.KEY_NAME)
+        if key_name:
+            user_keypair = self.client_plugin().get_keypair(key_name)
+            public_keys.append(user_keypair.public_key)
+        personality = {"/root/.ssh/authorized_keys": '\n'.join(public_keys)}
+
+        # Add any user-provided personality files
+        user_personality = self.properties.get(self.PERSONALITY)
+        if user_personality:
+            personality.update(user_personality)
+
+        return personality
+
+    def _key_name(self):
+        return None
 
     def _check_managed_cloud_complete(self, server):
         if not self._managed_cloud_started_event_sent:
@@ -197,7 +377,21 @@ class CloudServer(server.Server):
 
     def check_create_complete(self, server):
         """Check if server creation is complete and handle server configs."""
-        if not super(CloudServer, self).check_create_complete(server):
+        if self._proc:  # subprocess has already been started
+            ret_cd = self._proc.poll()
+            if ret_cd is None:
+                return False
+            elif ret_cd == 0:
+                msg = _("user_data run complete")
+                self._add_event(self.action, self.status, msg)
+                return True
+
+            stdout, stderr = self._proc.communicate()
+            LOG.error("Server user_data run failed [STDOUT]: %s" % stdout)
+            LOG.error("Server user_data run failed [STDERR]: %s" % stderr)
+            raise exception.Error("User data script exited with code %s" % ret_cd)
+
+        if not self._check_active(server):
             return False
 
         self.client_plugin().refresh_server(server)
@@ -208,6 +402,59 @@ class CloudServer(server.Server):
 
         if 'rax_managed' in self.context.roles and not \
            self._check_managed_cloud_complete(server):
+            return False
+
+        if self.has_userdata:
+            path = (os.path.dirname(os.path.realpath(__file__)) +
+                    "/run_user_data.py")
+            with tempfile.NamedTemporaryFile(delete=False) as key_file:
+                key_file.write(self.private_key)
+
+            raw_userdata = self.properties[self.USER_DATA]
+            userdata = self.client_plugin().build_userdata(self.metadata_get(),
+                                                           raw_userdata)
+            with tempfile.NamedTemporaryFile(delete=False) as userdata_file:
+                userdata_file.write(userdata)
+            with tempfile.NamedTemporaryFile(delete=False) as script_file:
+                script_file.write(self.script)
+
+            cmd = ("nice timeout -k 5 %s "
+                   "python %s "
+                   "--userdata-file %s "
+                   "--script-file %s "
+                   "--ip %s "
+                   "--key-file %s "
+                   "--timeout %s "
+                   "--sftp-retries %s "
+                   "--jump-enabled %s "
+                   "--jump-host %s "
+                   "--jump-port %s "
+                   "--jump-user %s "
+                   "--jump-key %s" % (
+                       self.stack.timeout_secs(),
+                       path,
+                       userdata_file.name,
+                       script_file.name,
+                       self.server.accessIPv4,
+                       key_file.name,
+                       self.stack.timeout_secs(),
+                       cfg.CONF.sftp_retries,
+                       cfg.CONF.ssh_jump_enabled,
+                       cfg.CONF.ssh_jump_host,
+                       cfg.CONF.ssh_jump_port,
+                       cfg.CONF.ssh_jump_user,
+                       cfg.CONF.ssh_jump_key))
+            LOG.info(cmd)
+
+            msg = _("Running user_data")
+            self._add_event(self.action, self.status, msg)
+
+            self._proc = subprocess.Popen(shlex.split(cmd),
+                                          stderr=subprocess.PIPE,
+                                          stdout=subprocess.PIPE)
+            LOG.info("PID of spawned run_user_data.py process: %s" %
+                     self._proc.pid)
+            self.data_set('process_id', self._proc.pid)
             return False
 
         return True
@@ -234,25 +481,34 @@ class CloudServer(server.Server):
 
         return server
 
-    def handle_check(self):
-        server = self._check_server_status()
-        checks = []
+    def handle_delete(self):
+        deleter = super(CloudServer, self).handle_delete()
+        pid = self.data().get('process_id')
+        if pid is None:
+            return deleter, None
+        try:
+            proc = psutil.Process(int(pid))
+        except psutil.NoSuchProcess:
+            return deleter, None
+        LOG.info("Killing PID %s" % pid)
+        proc.terminate()
+        return deleter, proc
 
-        if 'rack_connect' in self.context.roles:
-            rc_status = self._check_rack_connect_complete(server)
-            checks.append(
-                {'attr': 'rackconnect complete', 'expected': True,
-                 'current': rc_status}
-            )
+    def check_delete_complete(self, token):
+        deleter, proc = token
 
-        if 'rax_managed' in self.context.roles:
-            mc_status = self._check_managed_cloud_complete(server)
-            checks.append(
-                {'attr': 'managed_cloud complete', 'expected': True,
-                 'current': mc_status}
-            )
+        ret_val = super(CloudServer, self).check_delete_complete(deleter)
+        if not ret_val:
+            return False
 
-        self._verify_check_conditions(checks)
+        if proc is None:
+            return True
+        try:
+            proc.wait(timeout=0)
+        except psutil.TimeoutExpired:
+            return False
+        else:
+            return True
 
 
 def resource_mapping():
