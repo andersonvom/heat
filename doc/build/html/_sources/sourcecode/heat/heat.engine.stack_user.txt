@@ -1,0 +1,8 @@
+========================================
+The :mod:`heat.engine.stack_user` Module
+========================================
+.. automodule:: heat.engine.stack_user
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :noindex:

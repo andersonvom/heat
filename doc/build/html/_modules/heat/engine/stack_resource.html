@@ -1,0 +1,459 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>heat.engine.stack_resource &mdash; heat 2015.1.dev542.ga481ba9 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2015.1.dev542.ga481ba9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="heat 2015.1.dev542.ga481ba9 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for heat.engine.stack_resource</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may</span>
+<span class="c">#    not use this file except in compliance with the License. You may obtain</span>
+<span class="c">#    a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#         http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c">#    Unless required by applicable law or agreed to in writing, software</span>
+<span class="c">#    distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="c">#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="c">#    License for the specific language governing permissions and limitations</span>
+<span class="c">#    under the License.</span>
+
+<span class="kn">import</span> <span class="nn">hashlib</span>
+
+<span class="kn">from</span> <span class="nn">oslo.config</span> <span class="kn">import</span> <span class="n">cfg</span>
+<span class="kn">from</span> <span class="nn">oslo.serialization</span> <span class="kn">import</span> <span class="n">jsonutils</span>
+
+<span class="kn">from</span> <span class="nn">heat.common</span> <span class="kn">import</span> <span class="n">exception</span>
+<span class="kn">from</span> <span class="nn">heat.common.i18n</span> <span class="kn">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">heat.common.i18n</span> <span class="kn">import</span> <span class="n">_LI</span>
+<span class="kn">from</span> <span class="nn">heat.common.i18n</span> <span class="kn">import</span> <span class="n">_LW</span>
+<span class="kn">from</span> <span class="nn">heat.engine</span> <span class="kn">import</span> <span class="n">attributes</span>
+<span class="kn">from</span> <span class="nn">heat.engine</span> <span class="kn">import</span> <span class="n">environment</span>
+<span class="kn">from</span> <span class="nn">heat.engine</span> <span class="kn">import</span> <span class="n">resource</span>
+<span class="kn">from</span> <span class="nn">heat.engine</span> <span class="kn">import</span> <span class="n">scheduler</span>
+<span class="kn">from</span> <span class="nn">heat.engine</span> <span class="kn">import</span> <span class="n">stack</span> <span class="k">as</span> <span class="n">parser</span>
+<span class="kn">from</span> <span class="nn">heat.engine</span> <span class="kn">import</span> <span class="n">template</span>
+<span class="kn">from</span> <span class="nn">heat.openstack.common</span> <span class="kn">import</span> <span class="n">log</span> <span class="k">as</span> <span class="n">logging</span>
+
+<span class="n">cfg</span><span class="o">.</span><span class="n">CONF</span><span class="o">.</span><span class="n">import_opt</span><span class="p">(</span><span class="s">&#39;error_wait_time&#39;</span><span class="p">,</span> <span class="s">&#39;heat.common.config&#39;</span><span class="p">)</span>
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="StackResource"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource">[docs]</a><span class="k">class</span> <span class="nc">StackResource</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    An abstract Resource subclass that allows the management of an entire Stack</span>
+<span class="sd">    as a resource in a parent stack.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c"># Assume True as this is evaluated before the stack is created</span>
+    <span class="c"># so there is no way to know for sure without subclass-specific</span>
+    <span class="c"># template parsing.</span>
+    <span class="n">requires_deferred_auth</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">json_snippet</span><span class="p">,</span> <span class="n">stack</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StackResource</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">json_snippet</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">_outputs_to_attribs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_snippet</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">json_snippet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;Outputs&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="ow">and</span> <span class="n">outputs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attributes_schema</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">attributes</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">schema_from_outputs</span><span class="p">(</span><span class="n">outputs</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">Attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">attributes_schema</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_attribute</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StackResource.nested"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.nested">[docs]</a>    <span class="k">def</span> <span class="nf">nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_reload</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">show_deleted</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Return a Stack object representing the nested (child) stack.</span>
+<span class="sd">        :param force_reload: Forces reloading from the DB instead of returning</span>
+<span class="sd">                             the locally cached Stack object</span>
+<span class="sd">        :param show_deleted: Returns the stack even if it&#39;s been deleted</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">force_reload</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">Stack</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">resource_id</span><span class="p">,</span>
+                                             <span class="n">parent_resource</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                             <span class="n">show_deleted</span><span class="o">=</span><span class="n">show_deleted</span><span class="p">,</span>
+                                             <span class="n">force_reload</span><span class="o">=</span><span class="n">force_reload</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">NotFound</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Nested stack not found in DB&quot;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span>
+</div>
+<div class="viewcode-block" id="StackResource.child_template"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.child_template">[docs]</a>    <span class="k">def</span> <span class="nf">child_template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Default implementation to get the child template.</span>
+
+<span class="sd">        Resources that inherit from StackResource should override this method</span>
+<span class="sd">        with specific details about the template used by them.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="StackResource.child_params"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.child_params">[docs]</a>    <span class="k">def</span> <span class="nf">child_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Default implementation to get the child params.</span>
+
+<span class="sd">        Resources that inherit from StackResource should override this method</span>
+<span class="sd">        with specific details about the parameters used by them.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="StackResource.preview"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.preview">[docs]</a>    <span class="k">def</span> <span class="nf">preview</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Preview a StackResource as resources within a Stack.</span>
+
+<span class="sd">        This method overrides the original Resource.preview to return a preview</span>
+<span class="sd">        of all the resources contained in this Stack.  For this to be possible,</span>
+<span class="sd">        the specific resources need to override both ``child_template`` and</span>
+<span class="sd">        ``child_params`` with specific information to allow the stack to be</span>
+<span class="sd">        parsed correctly. If any of these methods is missing, the entire</span>
+<span class="sd">        StackResource will be returned as if it were a regular Resource.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">child_template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">child_template</span><span class="p">()</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">child_params</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">_LW</span><span class="p">(</span><span class="s">&quot;Preview of &#39;</span><span class="si">%s</span><span class="s">&#39; not yet implemented&quot;</span><span class="p">),</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_nested_stack</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">child_template</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span><span class="o">.</span><span class="n">preview_resources</span><span class="p">()</span>
+</div>
+    <span class="k">def</span> <span class="nf">_parse_child_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child_template</span><span class="p">):</span>
+        <span class="n">parsed_child_template</span> <span class="o">=</span> <span class="n">child_template</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed_child_template</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">Template</span><span class="p">):</span>
+            <span class="n">parsed_child_template</span> <span class="o">=</span> <span class="n">parsed_child_template</span><span class="o">.</span><span class="n">t</span>
+        <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">parsed_child_template</span><span class="p">,</span>
+                                 <span class="n">files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_nested_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack_name</span><span class="p">,</span> <span class="n">child_template</span><span class="p">,</span> <span class="n">child_params</span><span class="p">,</span>
+                            <span class="n">timeout_mins</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">adopt_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">nested_depth</span> <span class="o">&gt;=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">CONF</span><span class="o">.</span><span class="n">max_nested_stack_depth</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Recursion depth exceeds </span><span class="si">%d</span><span class="s">.&quot;</span><span class="p">)</span> <span class="o">%</span> \
+                <span class="n">cfg</span><span class="o">.</span><span class="n">CONF</span><span class="o">.</span><span class="n">max_nested_stack_depth</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">RequestLimitExceeded</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">parsed_template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_child_template</span><span class="p">(</span><span class="n">child_template</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_nested_resources</span><span class="p">(</span><span class="n">parsed_template</span><span class="p">)</span>
+
+        <span class="c"># Don&#39;t overwrite the attributes_schema for subclasses that</span>
+        <span class="c"># define their own attributes_schema.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s">&#39;attributes_schema&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_outputs_to_attribs</span><span class="p">(</span><span class="n">parsed_template</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">timeout_mins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">timeout_mins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">timeout_mins</span>
+
+        <span class="n">stack_user_project_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">stack_user_project_id</span>
+        <span class="n">new_nested_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">nested_depth</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c"># Note we disable rollback for nested stacks, since they</span>
+        <span class="c"># should be rolled back by the parent stack on failure</span>
+        <span class="n">child_env</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_custom_environment</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">registry</span><span class="p">,</span>
+            <span class="n">child_params</span><span class="p">)</span>
+        <span class="n">nested</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">Stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+                              <span class="n">stack_name</span><span class="p">,</span>
+                              <span class="n">parsed_template</span><span class="p">,</span>
+                              <span class="n">child_env</span><span class="p">,</span>
+                              <span class="n">timeout_mins</span><span class="o">=</span><span class="n">timeout_mins</span><span class="p">,</span>
+                              <span class="n">disable_rollback</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                              <span class="n">parent_resource</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">owner_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                              <span class="n">user_creds_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">user_creds_id</span><span class="p">,</span>
+                              <span class="n">stack_user_project_id</span><span class="o">=</span><span class="n">stack_user_project_id</span><span class="p">,</span>
+                              <span class="n">adopt_stack_data</span><span class="o">=</span><span class="n">adopt_data</span><span class="p">,</span>
+                              <span class="n">nested_depth</span><span class="o">=</span><span class="n">new_nested_depth</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nested</span>
+
+    <span class="k">def</span> <span class="nf">_validate_nested_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">templ</span><span class="p">):</span>
+        <span class="n">total_resources</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">templ</span><span class="p">[</span><span class="n">templ</span><span class="o">.</span><span class="n">RESOURCES</span><span class="p">])</span> <span class="o">+</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">root_stack</span><span class="o">.</span><span class="n">total_resources</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">():</span>
+            <span class="c"># It&#39;s an update and these resources will be deleted</span>
+            <span class="n">total_resources</span> <span class="o">-=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span><span class="o">.</span><span class="n">resources</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">total_resources</span> <span class="o">&gt;</span> <span class="n">cfg</span><span class="o">.</span><span class="n">CONF</span><span class="o">.</span><span class="n">max_resources_per_stack</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">exception</span><span class="o">.</span><span class="n">StackResourceLimitExceeded</span><span class="o">.</span><span class="n">msg_fmt</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">RequestLimitExceeded</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StackResource.create_with_template"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.create_with_template">[docs]</a>    <span class="k">def</span> <span class="nf">create_with_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child_template</span><span class="p">,</span> <span class="n">user_params</span><span class="p">,</span>
+                             <span class="n">timeout_mins</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">adopt_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the nested stack with the given template.&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_resource_name</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_nested_stack</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">child_template</span><span class="p">,</span>
+                                                <span class="n">user_params</span><span class="p">,</span> <span class="n">timeout_mins</span><span class="p">,</span>
+                                                <span class="n">adopt_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="n">nested_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">store</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource_id_set</span><span class="p">(</span><span class="n">nested_id</span><span class="p">)</span>
+
+        <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">CREATE</span>
+        <span class="n">error_wait_time</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">CONF</span><span class="o">.</span><span class="n">error_wait_time</span>
+        <span class="k">if</span> <span class="n">adopt_data</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">ADOPT</span>
+            <span class="n">error_wait_time</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="n">stack_creator</span> <span class="o">=</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">TaskRunner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">stack_task</span><span class="p">,</span>
+                                             <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span>
+                                             <span class="n">error_wait_time</span><span class="o">=</span><span class="n">error_wait_time</span><span class="p">)</span>
+        <span class="n">stack_creator</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">timeout_secs</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">stack_creator</span>
+</div>
+<div class="viewcode-block" id="StackResource.check_create_complete"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.check_create_complete">[docs]</a>    <span class="k">def</span> <span class="nf">check_create_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack_creator</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">stack_creator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">stack_creator</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">CREATE</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">status_reason</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">done</span>
+</div>
+<div class="viewcode-block" id="StackResource.update_with_template"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.update_with_template">[docs]</a>    <span class="k">def</span> <span class="nf">update_with_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child_template</span><span class="p">,</span> <span class="n">user_params</span><span class="p">,</span>
+                             <span class="n">timeout_mins</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the nested stack with the new template.&quot;&quot;&quot;</span>
+        <span class="n">nested_stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">nested_stack</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;Cannot update </span><span class="si">%s</span><span class="s">, stack not created&#39;</span><span class="p">)</span>
+                                  <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_resource_name</span><span class="p">()</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_nested_stack</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">child_template</span><span class="p">,</span> <span class="n">user_params</span><span class="p">,</span>
+                                         <span class="n">timeout_mins</span><span class="p">)</span>
+        <span class="n">stack</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="n">stack</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">set_stack_id</span><span class="p">(</span><span class="n">nested_stack</span><span class="o">.</span><span class="n">identifier</span><span class="p">())</span>
+        <span class="n">nested_stack</span><span class="o">.</span><span class="n">updated_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updated_time</span>
+        <span class="n">updater</span> <span class="o">=</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">TaskRunner</span><span class="p">(</span><span class="n">nested_stack</span><span class="o">.</span><span class="n">update_task</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
+        <span class="n">updater</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">updater</span>
+</div>
+<div class="viewcode-block" id="StackResource.check_update_complete"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.check_update_complete">[docs]</a>    <span class="k">def</span> <span class="nf">check_update_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">updater</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">updater</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">updater</span><span class="o">.</span><span class="n">step</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="n">nested_stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">nested_stack</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="p">(</span><span class="n">nested_stack</span><span class="o">.</span><span class="n">UPDATE</span><span class="p">,</span>
+                                  <span class="n">nested_stack</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Nested stack UPDATE failed: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">)</span> <span class="o">%</span>
+                                  <span class="n">nested_stack</span><span class="o">.</span><span class="n">status_reason</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="StackResource.delete_nested"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.delete_nested">[docs]</a>    <span class="k">def</span> <span class="nf">delete_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Delete the nested stack.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">exception</span><span class="o">.</span><span class="n">NotFound</span><span class="p">:</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">_LI</span><span class="p">(</span><span class="s">&quot;Stack not found to delete&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stack</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">delete_task</span> <span class="o">=</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">TaskRunner</span><span class="p">(</span><span class="n">stack</span><span class="o">.</span><span class="n">delete</span><span class="p">)</span>
+                <span class="n">delete_task</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">delete_task</span>
+</div>
+<div class="viewcode-block" id="StackResource.check_delete_complete"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.check_delete_complete">[docs]</a>    <span class="k">def</span> <span class="nf">check_delete_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delete_task</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">delete_task</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="n">done</span> <span class="o">=</span> <span class="n">delete_task</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="n">nested_stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">nested_stack</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="p">(</span><span class="n">nested_stack</span><span class="o">.</span><span class="n">DELETE</span><span class="p">,</span>
+                                      <span class="n">nested_stack</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">nested_stack</span><span class="o">.</span><span class="n">status_reason</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">done</span>
+</div>
+<div class="viewcode-block" id="StackResource.handle_suspend"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.handle_suspend">[docs]</a>    <span class="k">def</span> <span class="nf">handle_suspend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">stack</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;Cannot suspend </span><span class="si">%s</span><span class="s">, stack not created&#39;</span><span class="p">)</span>
+                                  <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">suspend_task</span> <span class="o">=</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">TaskRunner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">stack_task</span><span class="p">,</span>
+                                            <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">SUSPEND</span><span class="p">,</span>
+                                            <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="n">suspend_task</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">timeout_secs</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">suspend_task</span>
+</div>
+<div class="viewcode-block" id="StackResource.check_suspend_complete"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.check_suspend_complete">[docs]</a>    <span class="k">def</span> <span class="nf">check_suspend_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suspend_task</span><span class="p">):</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">suspend_task</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">SUSPEND</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">status_reason</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">done</span>
+</div>
+<div class="viewcode-block" id="StackResource.handle_resume"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.handle_resume">[docs]</a>    <span class="k">def</span> <span class="nf">handle_resume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">stack</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;Cannot resume </span><span class="si">%s</span><span class="s">, stack not created&#39;</span><span class="p">)</span>
+                                  <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">resume_task</span> <span class="o">=</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">TaskRunner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">stack_task</span><span class="p">,</span>
+                                           <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">RESUME</span><span class="p">,</span>
+                                           <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="n">resume_task</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">timeout_secs</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">resume_task</span>
+</div>
+<div class="viewcode-block" id="StackResource.check_resume_complete"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.check_resume_complete">[docs]</a>    <span class="k">def</span> <span class="nf">check_resume_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resume_task</span><span class="p">):</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">resume_task</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">RESUME</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">status_reason</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">done</span>
+</div>
+<div class="viewcode-block" id="StackResource.handle_check"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.handle_check">[docs]</a>    <span class="k">def</span> <span class="nf">handle_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">stack</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;Cannot check </span><span class="si">%s</span><span class="s">, stack not created&#39;</span><span class="p">)</span>
+                                  <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">check_task</span> <span class="o">=</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">TaskRunner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">stack_task</span><span class="p">,</span>
+                                          <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">CHECK</span><span class="p">,</span>
+                                          <span class="n">aggregate_exceptions</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="n">check_task</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nested</span><span class="o">.</span><span class="n">timeout_secs</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">check_task</span>
+</div>
+<div class="viewcode-block" id="StackResource.check_check_complete"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.check_check_complete">[docs]</a>    <span class="k">def</span> <span class="nf">check_check_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_task</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">check_task</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="StackResource.prepare_abandon"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.prepare_abandon">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_abandon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span><span class="o">.</span><span class="n">prepare_abandon</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="StackResource.get_output"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.get_output">[docs]</a>    <span class="k">def</span> <span class="nf">get_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Return the specified Output value from the nested stack.</span>
+
+<span class="sd">        If the output key does not exist, raise an InvalidTemplateAttribute</span>
+<span class="sd">        exception.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nested</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">stack</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stack</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">InvalidTemplateAttribute</span><span class="p">(</span><span class="n">resource</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                     <span class="n">key</span><span class="o">=</span><span class="n">op</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stack</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_resolve_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StackResource.implementation_signature"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_resource.html#heat.engine.stack_resource.StackResource.implementation_signature">[docs]</a>    <span class="k">def</span> <span class="nf">implementation_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">schema_names</span> <span class="o">=</span> <span class="p">([</span><span class="n">prop</span> <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties_schema</span><span class="p">]</span> <span class="o">+</span>
+                        <span class="p">[</span><span class="n">at</span> <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes_schema</span><span class="p">])</span>
+        <span class="n">schema_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">schema_names</span><span class="p">))</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;template&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">child_template</span><span class="p">(),</span>
+                      <span class="s">&#39;files&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">files</span><span class="p">}</span>
+        <span class="n">definition_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">jsonutils</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">definition</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">schema_hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="n">definition_hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../../index.html">heat 2015.1.dev542.ga481ba9 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,2013 Heat Developers.
+      Last updated on Mon Dec 8 11:11:34 2014, commit a481ba9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

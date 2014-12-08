@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The heat.engine.stack_resource Module &mdash; heat 2015.1.dev542.ga481ba9 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2015.1.dev542.ga481ba9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="heat 2015.1.dev542.ga481ba9 documentation" href="../../index.html" />
+    <link rel="up" title="Source Code Index" href="../autoindex.html" />
+    <link rel="next" title="The heat.engine.signal_responder Module" href="heat.engine.signal_responder.html" />
+    <link rel="prev" title="The heat.engine.scheduler Module" href="heat.engine.scheduler.html" /> 
+  </head>
+  <body>
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-heat-engine-stack-resource-module">
+<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">heat.engine.stack_resource</span></tt> Module<a class="headerlink" href="#the-heat-engine-stack-resource-module" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">heat.engine.stack_resource.</tt><tt class="descname">StackResource</tt><big>(</big><em>name</em>, <em>json_snippet</em>, <em>stack</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">heat.engine.resource.Resource</span></tt></p>
+<p>An abstract Resource subclass that allows the management of an entire Stack
+as a resource in a parent stack.</p>
+<dl class="method">
+<dt>
+<tt class="descname">check_check_complete</tt><big>(</big><em>check_task</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.check_check_complete"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">check_create_complete</tt><big>(</big><em>stack_creator</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.check_create_complete"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">check_delete_complete</tt><big>(</big><em>delete_task</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.check_delete_complete"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">check_resume_complete</tt><big>(</big><em>resume_task</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.check_resume_complete"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">check_suspend_complete</tt><big>(</big><em>suspend_task</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.check_suspend_complete"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">check_update_complete</tt><big>(</big><em>updater</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.check_update_complete"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">child_params</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.child_params"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Default implementation to get the child params.</p>
+<p>Resources that inherit from StackResource should override this method
+with specific details about the parameters used by them.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">child_template</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.child_template"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Default implementation to get the child template.</p>
+<p>Resources that inherit from StackResource should override this method
+with specific details about the template used by them.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">create_with_template</tt><big>(</big><em>child_template</em>, <em>user_params</em>, <em>timeout_mins=None</em>, <em>adopt_data=None</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.create_with_template"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Create the nested stack with the given template.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">delete_nested</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.delete_nested"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Delete the nested stack.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">get_output</tt><big>(</big><em>op</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.get_output"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return the specified Output value from the nested stack.</p>
+<p>If the output key does not exist, raise an InvalidTemplateAttribute
+exception.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">handle_check</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.handle_check"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">handle_resume</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.handle_resume"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">handle_suspend</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.handle_suspend"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">implementation_signature</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.implementation_signature"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">nested</tt><big>(</big><em>force_reload=False</em>, <em>show_deleted=False</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.nested"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a Stack object representing the nested (child) stack.
+:param force_reload: Forces reloading from the DB instead of returning</p>
+<blockquote>
+<div>the locally cached Stack object</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show_deleted</strong> &#8211; Returns the stack even if it&#8217;s been deleted</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">prepare_abandon</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.prepare_abandon"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">preview</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.preview"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Preview a StackResource as resources within a Stack.</p>
+<p>This method overrides the original Resource.preview to return a preview
+of all the resources contained in this Stack.  For this to be possible,
+the specific resources need to override both <tt class="docutils literal"><span class="pre">child_template</span></tt> and
+<tt class="docutils literal"><span class="pre">child_params</span></tt> with specific information to allow the stack to be
+parsed correctly. If any of these methods is missing, the entire
+StackResource will be returned as if it were a regular Resource.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">requires_deferred_auth</tt><em class="property"> = True</em></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">update_with_template</tt><big>(</big><em>child_template</em>, <em>user_params</em>, <em>timeout_mins=None</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/stack_resource.html#StackResource.update_with_template"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Update the nested stack with the new template.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="heat.engine.scheduler.html"
+                                  title="previous chapter">The <tt class="docutils literal"><span class="pre">heat.engine.scheduler</span></tt> Module</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="heat.engine.signal_responder.html"
+                                  title="next chapter">The <tt class="docutils literal"><span class="pre">heat.engine.signal_responder</span></tt> Module</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/sourcecode/heat/heat.engine.stack_resource.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="heat.engine.signal_responder.html" title="The heat.engine.signal_responder Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="heat.engine.scheduler.html" title="The heat.engine.scheduler Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">heat 2015.1.dev542.ga481ba9 documentation</a> &raquo;</li>
+          <li><a href="../autoindex.html" accesskey="U">Source Code Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,2013 Heat Developers.
+      Last updated on Mon Dec 8 11:11:34 2014, commit a481ba9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

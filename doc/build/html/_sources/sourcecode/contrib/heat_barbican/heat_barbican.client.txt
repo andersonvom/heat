@@ -1,0 +1,8 @@
+======================================
+The :mod:`heat_barbican.client` Module
+======================================
+.. automodule:: heat_barbican.client
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :noindex:

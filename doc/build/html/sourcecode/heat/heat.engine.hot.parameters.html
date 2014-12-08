@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The heat.engine.hot.parameters Module &mdash; heat 2015.1.dev542.ga481ba9 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2015.1.dev542.ga481ba9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="heat 2015.1.dev542.ga481ba9 documentation" href="../../index.html" />
+    <link rel="up" title="Source Code Index" href="../autoindex.html" />
+    <link rel="next" title="The heat.engine.hot Module" href="heat.engine.hot.html" />
+    <link rel="prev" title="The heat.engine.hot.template Module" href="heat.engine.hot.template.html" /> 
+  </head>
+  <body>
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-heat-engine-hot-parameters-module">
+<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">heat.engine.hot.parameters</span></tt> Module<a class="headerlink" href="#the-heat-engine-hot-parameters-module" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">heat.engine.hot.parameters.</tt><tt class="descname">HOTParamSchema</tt><big>(</big><em>data_type</em>, <em>description=None</em>, <em>default=None</em>, <em>schema=None</em>, <em>constraints=None</em>, <em>hidden=False</em>, <em>label=None</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/hot/parameters.html#HOTParamSchema"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">heat.engine.parameters.Schema</span></tt></p>
+<p>HOT parameter schema.</p>
+<dl class="attribute">
+<dt>
+<tt class="descname">BOOLEAN</tt><em class="property"> = 'boolean'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">CONSTRAINTS</tt><em class="property"> = 'constraints'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">DEFAULT</tt><em class="property"> = 'default'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">DESCRIPTION</tt><em class="property"> = 'description'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">HIDDEN</tt><em class="property"> = 'hidden'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">KEYS</tt><em class="property"> = ('type', 'description', 'default', 'schema', 'constraints', 'hidden', 'label')</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">LABEL</tt><em class="property"> = 'label'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">LIST</tt><em class="property"> = 'comma_delimited_list'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">MAP</tt><em class="property"> = 'json'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">NUMBER</tt><em class="property"> = 'number'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">PARAMETER_KEYS</tt><em class="property"> = ('type', 'description', 'default', 'schema', 'constraints', 'hidden', 'label')</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">SCHEMA</tt><em class="property"> = 'schema'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">STRING</tt><em class="property"> = 'string'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">TYPE</tt><em class="property"> = 'type'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">TYPES</tt><em class="property"> = ('string', 'number', 'comma_delimited_list', 'json', 'boolean')</em></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">from_dict</tt><big>(</big><em>param_name</em>, <em>schema_dict</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/hot/parameters.html#HOTParamSchema.from_dict"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a Parameter Schema object from a legacy schema dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>param_name</strong> (<em>str</em>) &#8211; name of the parameter owning the schema; used
+for more verbose logging</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">heat.engine.hot.parameters.</tt><tt class="descname">HOTParameters</tt><big>(</big><em>stack_identifier</em>, <em>tmpl</em>, <em>user_params=None</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/hot/parameters.html#HOTParameters"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">heat.engine.parameters.Parameters</span></tt></p>
+<dl class="attribute">
+<dt>
+<tt class="descname">PARAM_REGION</tt><em class="property"> = 'OS::region'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">PARAM_STACK_ID</tt><em class="property"> = 'OS::stack_id'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">PARAM_STACK_NAME</tt><em class="property"> = 'OS::stack_name'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">PSEUDO_PARAMETERS</tt><em class="property"> = ('OS::stack_id', 'OS::stack_name', 'OS::region')</em></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">set_stack_id</tt><big>(</big><em>stack_identifier</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/hot/parameters.html#HOTParameters.set_stack_id"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the StackId pseudo parameter value</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="heat.engine.hot.template.html"
+                                  title="previous chapter">The <tt class="docutils literal"><span class="pre">heat.engine.hot.template</span></tt> Module</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="heat.engine.hot.html"
+                                  title="next chapter">The <tt class="docutils literal"><span class="pre">heat.engine.hot</span></tt> Module</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/sourcecode/heat/heat.engine.hot.parameters.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="heat.engine.hot.html" title="The heat.engine.hot Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="heat.engine.hot.template.html" title="The heat.engine.hot.template Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">heat 2015.1.dev542.ga481ba9 documentation</a> &raquo;</li>
+          <li><a href="../autoindex.html" accesskey="U">Source Code Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,2013 Heat Developers.
+      Last updated on Mon Dec 8 11:11:34 2014, commit a481ba9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

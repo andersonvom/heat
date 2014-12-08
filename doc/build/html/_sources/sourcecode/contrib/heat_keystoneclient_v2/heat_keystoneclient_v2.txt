@@ -1,0 +1,8 @@
+========================================
+The :mod:`heat_keystoneclient_v2` Module
+========================================
+.. automodule:: heat_keystoneclient_v2
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :noindex:

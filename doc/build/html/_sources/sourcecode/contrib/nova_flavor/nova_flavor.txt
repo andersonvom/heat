@@ -1,0 +1,8 @@
+=============================
+The :mod:`nova_flavor` Module
+=============================
+.. automodule:: nova_flavor
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :noindex:

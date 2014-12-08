@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The heat.engine.watchrule Module &mdash; heat 2015.1.dev542.ga481ba9 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2015.1.dev542.ga481ba9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="heat 2015.1.dev542.ga481ba9 documentation" href="../../index.html" />
+    <link rel="up" title="Source Code Index" href="../autoindex.html" />
+    <link rel="next" title="The heat.engine.template Module" href="heat.engine.template.html" />
+    <link rel="prev" title="The heat.engine.signal_responder Module" href="heat.engine.signal_responder.html" /> 
+  </head>
+  <body>
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-heat-engine-watchrule-module">
+<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">heat.engine.watchrule</span></tt> Module<a class="headerlink" href="#the-heat-engine-watchrule-module" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">heat.engine.watchrule.</tt><tt class="descname">WatchRule</tt><big>(</big><em>context</em>, <em>watch_name</em>, <em>rule</em>, <em>stack_id=None</em>, <em>state='NODATA'</em>, <em>wid=None</em>, <em>watch_data=None</em>, <em>last_evaluated=datetime.datetime(2014</em>, <em>12</em>, <em>8</em>, <em>17</em>, <em>15</em>, <em>10</em>, <em>178606)</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt>
+<tt class="descname">ACTION_MAP</tt><em class="property"> = {'ALARM': 'AlarmActions', 'NODATA': 'InsufficientDataActions', 'NORMAL': 'OKActions'}</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">ALARM</tt><em class="property"> = 'ALARM'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">CEILOMETER_CONTROLLED</tt><em class="property"> = 'CEILOMETER_CONTROLLED'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">NODATA</tt><em class="property"> = 'NODATA'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">NORMAL</tt><em class="property"> = 'NORMAL'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">SUSPENDED</tt><em class="property"> = 'SUSPENDED'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">WATCH_STATES</tt><em class="property"> = ('ALARM', 'NORMAL', 'NODATA', 'SUSPENDED', 'CEILOMETER_CONTROLLED')</em></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">create_watch_data</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.create_watch_data"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">created_at</tt><em class="property"> = None</em></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">destroy</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.destroy"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Delete the watchrule from the database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">do_Average</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.do_Average"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">do_Maximum</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.do_Maximum"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">do_Minimum</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.do_Minimum"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">do_SampleCount</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.do_SampleCount"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>count all samples within the specified period</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">do_Sum</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.do_Sum"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">do_data_cmp</tt><big>(</big><em>data</em>, <em>threshold</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.do_data_cmp"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">evaluate</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.evaluate"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">get_alarm_state</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.get_alarm_state"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">get_details</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.get_details"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><tt class="descname">load</tt><big>(</big><em>context</em>, <em>watch_name=None</em>, <em>watch=None</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.load"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Load the watchrule object, either by name or via an existing DB object</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">rule_actions</tt><big>(</big><em>new_state</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.rule_actions"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">run_rule</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.run_rule"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">set_watch_state</tt><big>(</big><em>state</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.set_watch_state"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Temporarily set the watch state, returns list of functions to be
+scheduled in the stack ThreadGroup for the specified state</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">state_set</tt><big>(</big><em>state</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.state_set"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Persistently store the watch state</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">store</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#WatchRule.store"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Store the watchrule in the database and return its ID
+If self.id is set, we update the existing rule</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">updated_at</tt><em class="property"> = None</em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">heat.engine.watchrule.</tt><tt class="descname">rule_can_use_sample</tt><big>(</big><em>wr</em>, <em>stats_data</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/watchrule.html#rule_can_use_sample"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="heat.engine.signal_responder.html"
+                                  title="previous chapter">The <tt class="docutils literal"><span class="pre">heat.engine.signal_responder</span></tt> Module</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="heat.engine.template.html"
+                                  title="next chapter">The <tt class="docutils literal"><span class="pre">heat.engine.template</span></tt> Module</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/sourcecode/heat/heat.engine.watchrule.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="heat.engine.template.html" title="The heat.engine.template Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="heat.engine.signal_responder.html" title="The heat.engine.signal_responder Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">heat 2015.1.dev542.ga481ba9 documentation</a> &raquo;</li>
+          <li><a href="../autoindex.html" accesskey="U">Source Code Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,2013 Heat Developers.
+      Last updated on Mon Dec 8 11:11:34 2014, commit a481ba9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

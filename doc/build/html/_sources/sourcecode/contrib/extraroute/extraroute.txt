@@ -1,0 +1,8 @@
+============================
+The :mod:`extraroute` Module
+============================
+.. automodule:: extraroute
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :noindex:

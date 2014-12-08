@@ -1,0 +1,8 @@
+===========================
+The :mod:`rackspace` Module
+===========================
+.. automodule:: rackspace
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :noindex:

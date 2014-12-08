@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The heat.engine.dependencies Module &mdash; heat 2015.1.dev542.ga481ba9 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2015.1.dev542.ga481ba9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="heat 2015.1.dev542.ga481ba9 documentation" href="../../index.html" />
+    <link rel="up" title="Source Code Index" href="../autoindex.html" />
+    <link rel="next" title="The heat.engine.api Module" href="heat.engine.api.html" />
+    <link rel="prev" title="The heat.engine.stack Module" href="heat.engine.stack.html" /> 
+  </head>
+  <body>
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-heat-engine-dependencies-module">
+<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">heat.engine.dependencies</span></tt> Module<a class="headerlink" href="#the-heat-engine-dependencies-module" title="Permalink to this headline">¶</a></h1>
+<dl class="exception">
+<dt>
+<em class="property">exception </em><tt class="descclassname">heat.engine.dependencies.</tt><tt class="descname">CircularDependencyException</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#CircularDependencyException"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">heat.common.exception.HeatException</span></tt></p>
+<dl class="attribute">
+<dt>
+<tt class="descname">msg_fmt</tt><em class="property"> = u'Circular Dependency Found: %(cycle)s'</em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">heat.engine.dependencies.</tt><tt class="descname">Dependencies</tt><big>(</big><em>edges=None</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Dependencies"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Helper class for calculating a dependency graph.</p>
+<dl class="method">
+<dt>
+<tt class="descname">graph</tt><big>(</big><em>reverse=False</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Dependencies.graph"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a copy of the underlying dependency graph.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">required_by</tt><big>(</big><em>last</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Dependencies.required_by"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>List the keys that require the specified node.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">heat.engine.dependencies.</tt><tt class="descname">Graph</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Graph"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">collections.defaultdict</span></tt></p>
+<p>A mutable mapping of objects to nodes in a dependency graph.</p>
+<dl class="method">
+<dt>
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Graph.copy"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a copy of the graph.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">edges</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Graph.edges"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return an iterator over all of the edges in the graph.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">map</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Graph.map"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a dictionary derived from mapping the supplied function onto
+each node in the graph.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">reverse_copy</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Graph.reverse_copy"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a copy of the graph with the edges reversed.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><tt class="descname">toposort</tt><big>(</big><em>graph</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Graph.toposort"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a topologically sorted iterator over a dependency graph.</p>
+<p>This is a destructive operation for the graph.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">heat.engine.dependencies.</tt><tt class="descname">Node</tt><big>(</big><em>requires=None</em>, <em>required_by=None</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Node"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A node in a dependency graph.</p>
+<dl class="method">
+<dt>
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Node.copy"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a copy of the node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">disjoint</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Node.disjoint"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return True if this node is both a leaf and a stem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">required_by</tt><big>(</big><em>source=None</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Node.required_by"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>List the keys that require this node, and optionally add a
+new one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">requires</tt><big>(</big><em>target</em><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Node.requires"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Add a key that this node requires.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">reverse_copy</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Node.reverse_copy"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a copy of the node with the edge directions reversed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">stem</tt><big>(</big><big>)</big><a class="reference internal" href="../../_modules/heat/engine/dependencies.html#Node.stem"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return True if this node is a stem (required by nothing).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="heat.engine.stack.html"
+                                  title="previous chapter">The <tt class="docutils literal"><span class="pre">heat.engine.stack</span></tt> Module</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="heat.engine.api.html"
+                                  title="next chapter">The <tt class="docutils literal"><span class="pre">heat.engine.api</span></tt> Module</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/sourcecode/heat/heat.engine.dependencies.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="heat.engine.api.html" title="The heat.engine.api Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="heat.engine.stack.html" title="The heat.engine.stack Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">heat 2015.1.dev542.ga481ba9 documentation</a> &raquo;</li>
+          <li><a href="../autoindex.html" accesskey="U">Source Code Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,2013 Heat Developers.
+      Last updated on Mon Dec 8 11:11:34 2014, commit a481ba9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

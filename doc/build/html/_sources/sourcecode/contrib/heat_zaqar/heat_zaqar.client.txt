@@ -1,0 +1,8 @@
+===================================
+The :mod:`heat_zaqar.client` Module
+===================================
+.. automodule:: heat_zaqar.client
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :noindex:

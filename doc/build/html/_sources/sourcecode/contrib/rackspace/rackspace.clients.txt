@@ -1,0 +1,8 @@
+===================================
+The :mod:`rackspace.clients` Module
+===================================
+.. automodule:: rackspace.clients
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :noindex:

@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>heat.engine.stack_user &mdash; heat 2015.1.dev542.ga481ba9 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2015.1.dev542.ga481ba9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="heat 2015.1.dev542.ga481ba9 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for heat.engine.stack_user</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may</span>
+<span class="c">#    not use this file except in compliance with the License. You may obtain</span>
+<span class="c">#    a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#         http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c">#    Unless required by applicable law or agreed to in writing, software</span>
+<span class="c">#    distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="c">#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="c">#    License for the specific language governing permissions and limitations</span>
+<span class="c">#    under the License.</span>
+
+<span class="kn">import</span> <span class="nn">keystoneclient.exceptions</span> <span class="kn">as</span> <span class="nn">kc_exception</span>
+
+<span class="kn">from</span> <span class="nn">heat.common</span> <span class="kn">import</span> <span class="n">exception</span>
+<span class="kn">from</span> <span class="nn">heat.common.i18n</span> <span class="kn">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">heat.common.i18n</span> <span class="kn">import</span> <span class="n">_LW</span>
+<span class="kn">from</span> <span class="nn">heat.engine</span> <span class="kn">import</span> <span class="n">resource</span>
+<span class="kn">from</span> <span class="nn">heat.openstack.common</span> <span class="kn">import</span> <span class="n">log</span> <span class="k">as</span> <span class="n">logging</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="StackUser"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_user.html#heat.engine.stack_user.StackUser">[docs]</a><span class="k">class</span> <span class="nc">StackUser</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">Resource</span><span class="p">):</span>
+
+    <span class="c"># Subclasses create a user, and optionally keypair associated with a</span>
+    <span class="c"># resource in a stack. Users are created  in the heat stack user domain</span>
+    <span class="c"># (in a project specific to the stack)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">json_snippet</span><span class="p">,</span> <span class="n">stack</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StackUser</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">json_snippet</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StackUser.handle_create"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_user.html#heat.engine.stack_user.StackUser.handle_create">[docs]</a>    <span class="k">def</span> <span class="nf">handle_create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_user</span><span class="p">()</span>
+</div>
+    <span class="k">def</span> <span class="nf">_create_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Check for stack user project, create if not yet set</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">stack_user_project_id</span><span class="p">:</span>
+            <span class="n">project_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">create_stack_domain_project</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">set_stack_user_project_id</span><span class="p">(</span><span class="n">project_id</span><span class="p">)</span>
+
+        <span class="c"># Create a keystone user in the stack domain project</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">create_stack_domain_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_resource_name</span><span class="p">(),</span>
+            <span class="n">password</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;password&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+            <span class="n">project_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">stack_user_project_id</span><span class="p">)</span>
+
+        <span class="c"># Store the ID in resource data, for compatibility with SignalResponder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_set</span><span class="p">(</span><span class="s">&#39;user_id&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_user_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">project_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">stack_user_project_id</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">project_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Can&#39;t get user token, user not yet created&quot;</span><span class="p">))</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;password&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="c"># FIXME(shardy): the create and getattr here could allow insane</span>
+        <span class="c"># passwords, e.g a zero length string, if these happen it almost</span>
+        <span class="c"># certainly means a bug elsewhere in heat, so add assertion to catch</span>
+        <span class="k">if</span> <span class="n">password</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Can&#39;t get user token without password&quot;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">stack_domain_user_token</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_resource_name</span><span class="p">(),</span>
+            <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;user_id&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">user_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># FIXME(shardy): This is a legacy hack for backwards compatibility</span>
+            <span class="c"># remove after an appropriate transitional period...</span>
+            <span class="c"># Assume this is a resource that was created with</span>
+            <span class="c"># a previous version of heat and that the resource_id</span>
+            <span class="c"># is the user_id</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_id</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_set</span><span class="p">(</span><span class="s">&#39;user_id&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_id</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_id</span>
+
+<div class="viewcode-block" id="StackUser.handle_delete"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_user.html#heat.engine.stack_user.StackUser.handle_delete">[docs]</a>    <span class="k">def</span> <span class="nf">handle_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delete_user</span><span class="p">()</span>
+</div>
+    <span class="k">def</span> <span class="nf">_delete_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_user_id</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">delete_stack_domain_user</span><span class="p">(</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">stack_user_project_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">kc_exception</span><span class="o">.</span><span class="n">NotFound</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c"># FIXME(shardy): This is a legacy delete path for backwards</span>
+            <span class="c"># compatibility with resources created before the migration</span>
+            <span class="c"># to stack_user.StackUser domain users.  After an appropriate</span>
+            <span class="c"># transitional period, this should be removed.</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">_LW</span><span class="p">(</span><span class="s">&#39;Reverting to legacy user delete path&#39;</span><span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">delete_stack_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">kc_exception</span><span class="o">.</span><span class="n">NotFound</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">data_key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;credential_id&#39;</span><span class="p">,</span> <span class="s">&#39;access_key&#39;</span><span class="p">,</span> <span class="s">&#39;secret_key&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_delete</span><span class="p">(</span><span class="n">data_key</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StackUser.handle_suspend"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_user.html#heat.engine.stack_user.StackUser.handle_suspend">[docs]</a>    <span class="k">def</span> <span class="nf">handle_suspend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_user_id</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">disable_stack_domain_user</span><span class="p">(</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">stack_user_project_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c"># FIXME(shardy): This is a legacy path for backwards compatibility</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">disable_stack_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="StackUser.handle_resume"><a class="viewcode-back" href="../../../sourcecode/heat/heat.engine.stack_user.html#heat.engine.stack_user.StackUser.handle_resume">[docs]</a>    <span class="k">def</span> <span class="nf">handle_resume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_user_id</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">enable_stack_domain_user</span><span class="p">(</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">stack_user_project_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c"># FIXME(shardy): This is a legacy path for backwards compatibility</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">enable_stack_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_create_keypair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Subclasses may optionally call this in handle_create to create</span>
+        <span class="c"># an ec2 keypair associated with the user, the resulting keys are</span>
+        <span class="c"># stored in resource_data</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_user_id</span><span class="p">()</span>
+        <span class="n">kp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">create_stack_domain_user_keypair</span><span class="p">(</span>
+            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">stack_user_project_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">kp</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Error creating ec2 keypair for user </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">)</span> <span class="o">%</span>
+                                  <span class="n">user_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">credential_id</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">id</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="c"># keystone v2 keypairs do not have an id attribute. Use the</span>
+                <span class="c"># access key instead.</span>
+                <span class="n">credential_id</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">access</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_set</span><span class="p">(</span><span class="s">&#39;credential_id&#39;</span><span class="p">,</span> <span class="n">credential_id</span><span class="p">,</span> <span class="n">redact</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_set</span><span class="p">(</span><span class="s">&#39;access_key&#39;</span><span class="p">,</span> <span class="n">kp</span><span class="o">.</span><span class="n">access</span><span class="p">,</span> <span class="n">redact</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_set</span><span class="p">(</span><span class="s">&#39;secret_key&#39;</span><span class="p">,</span> <span class="n">kp</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span> <span class="n">redact</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">kp</span>
+
+    <span class="k">def</span> <span class="nf">_delete_keypair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Subclasses may optionally call this to delete a keypair created</span>
+        <span class="c"># via _create_keypair</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_user_id</span><span class="p">()</span>
+        <span class="n">credential_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;credential_id&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">credential_id</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">delete_stack_domain_user_keypair</span><span class="p">(</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">stack_user_project_id</span><span class="p">,</span>
+                <span class="n">credential_id</span><span class="o">=</span><span class="n">credential_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keystone</span><span class="p">()</span><span class="o">.</span><span class="n">delete_ec2_keypair</span><span class="p">(</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">credential_id</span><span class="o">=</span><span class="n">credential_id</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">data_key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;access_key&#39;</span><span class="p">,</span> <span class="s">&#39;secret_key&#39;</span><span class="p">,</span> <span class="s">&#39;credential_id&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_delete</span><span class="p">(</span><span class="n">data_key</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../../index.html">heat 2015.1.dev542.ga481ba9 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,2013 Heat Developers.
+      Last updated on Mon Dec 8 11:11:34 2014, commit a481ba9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

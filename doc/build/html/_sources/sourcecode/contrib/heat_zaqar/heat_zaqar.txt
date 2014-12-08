@@ -1,0 +1,8 @@
+============================
+The :mod:`heat_zaqar` Module
+============================
+.. automodule:: heat_zaqar
+  :members:
+  :undoc-members:
+  :show-inheritance:
+  :noindex:

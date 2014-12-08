@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>heat.api.openstack.v1 &mdash; heat 2015.1.dev542.ga481ba9 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2015.1.dev542.ga481ba9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="heat 2015.1.dev542.ga481ba9 documentation" href="../../../../index.html" />
+    <link rel="up" title="heat.api.openstack" href="../openstack.html" /> 
+  </head>
+  <body>
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for heat.api.openstack.v1</h1><div class="highlight"><pre>
+<span class="c">#</span>
+<span class="c">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may</span>
+<span class="c">#    not use this file except in compliance with the License. You may obtain</span>
+<span class="c">#    a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#         http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c">#    Unless required by applicable law or agreed to in writing, software</span>
+<span class="c">#    distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="c">#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="c">#    License for the specific language governing permissions and limitations</span>
+<span class="c">#    under the License.</span>
+
+<span class="kn">import</span> <span class="nn">routes</span>
+
+<span class="kn">from</span> <span class="nn">heat.api.openstack.v1</span> <span class="kn">import</span> <span class="n">actions</span>
+<span class="kn">from</span> <span class="nn">heat.api.openstack.v1</span> <span class="kn">import</span> <span class="n">build_info</span>
+<span class="kn">from</span> <span class="nn">heat.api.openstack.v1</span> <span class="kn">import</span> <span class="n">events</span>
+<span class="kn">from</span> <span class="nn">heat.api.openstack.v1</span> <span class="kn">import</span> <span class="n">resources</span>
+<span class="kn">from</span> <span class="nn">heat.api.openstack.v1</span> <span class="kn">import</span> <span class="n">software_configs</span>
+<span class="kn">from</span> <span class="nn">heat.api.openstack.v1</span> <span class="kn">import</span> <span class="n">software_deployments</span>
+<span class="kn">from</span> <span class="nn">heat.api.openstack.v1</span> <span class="kn">import</span> <span class="n">stacks</span>
+<span class="kn">from</span> <span class="nn">heat.common</span> <span class="kn">import</span> <span class="n">wsgi</span>
+
+
+<div class="viewcode-block" id="API"><a class="viewcode-back" href="../../../../sourcecode/heat/heat.api.openstack.v1.html#heat.api.openstack.v1.API">[docs]</a><span class="k">class</span> <span class="nc">API</span><span class="p">(</span><span class="n">wsgi</span><span class="o">.</span><span class="n">Router</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    WSGI router for Heat v1 ReST API requests.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="o">**</span><span class="n">local_conf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="n">conf</span>
+        <span class="n">mapper</span> <span class="o">=</span> <span class="n">routes</span><span class="o">.</span><span class="n">Mapper</span><span class="p">()</span>
+
+        <span class="c"># Stacks</span>
+        <span class="n">stacks_resource</span> <span class="o">=</span> <span class="n">stacks</span><span class="o">.</span><span class="n">create_resource</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">mapper</span><span class="o">.</span><span class="n">submapper</span><span class="p">(</span><span class="n">controller</span><span class="o">=</span><span class="n">stacks_resource</span><span class="p">,</span>
+                              <span class="n">path_prefix</span><span class="o">=</span><span class="s">&quot;/{tenant_id}&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stack_mapper</span><span class="p">:</span>
+            <span class="c"># Template handling</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;template_validate&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/validate&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;validate_template&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;resource_types&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/resource_types&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;list_resource_types&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;resource_schema&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/resource_types/{type_name}&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;resource_schema&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;generate_template&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/resource_types/{type_name}/template&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;generate_template&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="c"># Stack collection</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_index&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;index&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_create&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;create&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_preview&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/preview&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;preview&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_detail&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/detail&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;detail&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="c"># Stack data</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_lookup&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;lookup&quot;</span><span class="p">)</span>
+            <span class="c"># \x3A matches on a colon.</span>
+            <span class="c"># Routes treats : specially in its regexp</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_lookup&quot;</span><span class="p">,</span>
+                                 <span class="s">r&quot;/stacks/{stack_name:arn\x3A.*}&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;lookup&quot;</span><span class="p">)</span>
+            <span class="n">subpaths</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;resources&#39;</span><span class="p">,</span> <span class="s">&#39;events&#39;</span><span class="p">,</span> <span class="s">&#39;template&#39;</span><span class="p">,</span> <span class="s">&#39;actions&#39;</span><span class="p">]</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;{path:</span><span class="si">%s</span><span class="s">}&quot;</span> <span class="o">%</span> <span class="s">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subpaths</span><span class="p">)</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_lookup_subpath&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/&quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;lookup&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_lookup_subpath_post&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/&quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;lookup&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_show&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;show&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_template&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}/template&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;template&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="c"># Stack update/delete</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_update&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;update&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;PUT&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_update_patch&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;update_patch&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;PATCH&#39;</span><span class="p">})</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_delete&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;delete&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;DELETE&#39;</span><span class="p">})</span>
+
+            <span class="c"># Stack abandon</span>
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_abandon&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}/abandon&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;abandon&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;DELETE&#39;</span><span class="p">})</span>
+
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_snapshot&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}/snapshots&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;snapshot&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_snapshot_show&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}/snapshots/&quot;</span>
+                                 <span class="s">&quot;{snapshot_id}&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;show_snapshot&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_snapshot_delete&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}/snapshots/&quot;</span>
+                                 <span class="s">&quot;{snapshot_id}&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;delete_snapshot&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;DELETE&#39;</span><span class="p">})</span>
+
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_list_snapshots&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}/snapshots&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;list_snapshots&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="n">stack_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;stack_snapshot_restore&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;/stacks/{stack_name}/{stack_id}/snapshots/&quot;</span>
+                                 <span class="s">&quot;{snapshot_id}/restore&quot;</span><span class="p">,</span>
+                                 <span class="n">action</span><span class="o">=</span><span class="s">&quot;restore_snapshot&quot;</span><span class="p">,</span>
+                                 <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+
+        <span class="c"># Resources</span>
+        <span class="n">resources_resource</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">create_resource</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="n">stack_path</span> <span class="o">=</span> <span class="s">&quot;/{tenant_id}/stacks/{stack_name}/{stack_id}&quot;</span>
+        <span class="k">with</span> <span class="n">mapper</span><span class="o">.</span><span class="n">submapper</span><span class="p">(</span><span class="n">controller</span><span class="o">=</span><span class="n">resources_resource</span><span class="p">,</span>
+                              <span class="n">path_prefix</span><span class="o">=</span><span class="n">stack_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">res_mapper</span><span class="p">:</span>
+
+            <span class="c"># Resource collection</span>
+            <span class="n">res_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;resource_index&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;/resources&quot;</span><span class="p">,</span>
+                               <span class="n">action</span><span class="o">=</span><span class="s">&quot;index&quot;</span><span class="p">,</span>
+                               <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="c"># Resource data</span>
+            <span class="n">res_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;resource_show&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;/resources/{resource_name}&quot;</span><span class="p">,</span>
+                               <span class="n">action</span><span class="o">=</span><span class="s">&quot;show&quot;</span><span class="p">,</span>
+                               <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+            <span class="n">res_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;resource_metadata_show&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;/resources/{resource_name}/metadata&quot;</span><span class="p">,</span>
+                               <span class="n">action</span><span class="o">=</span><span class="s">&quot;metadata&quot;</span><span class="p">,</span>
+                               <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+            <span class="n">res_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;resource_signal&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;/resources/{resource_name}/signal&quot;</span><span class="p">,</span>
+                               <span class="n">action</span><span class="o">=</span><span class="s">&quot;signal&quot;</span><span class="p">,</span>
+                               <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+
+        <span class="c"># Events</span>
+        <span class="n">events_resource</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">create_resource</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">mapper</span><span class="o">.</span><span class="n">submapper</span><span class="p">(</span><span class="n">controller</span><span class="o">=</span><span class="n">events_resource</span><span class="p">,</span>
+                              <span class="n">path_prefix</span><span class="o">=</span><span class="n">stack_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">ev_mapper</span><span class="p">:</span>
+
+            <span class="c"># Stack event collection</span>
+            <span class="n">ev_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;event_index_stack&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/events&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;index&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+            <span class="c"># Resource event collection</span>
+            <span class="n">ev_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;event_index_resource&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/resources/{resource_name}/events&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;index&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="c"># Event data</span>
+            <span class="n">ev_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;event_show&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/resources/{resource_name}/events/{event_id}&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;show&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+        <span class="c"># Actions</span>
+        <span class="n">actions_resource</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">create_resource</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">mapper</span><span class="o">.</span><span class="n">submapper</span><span class="p">(</span><span class="n">controller</span><span class="o">=</span><span class="n">actions_resource</span><span class="p">,</span>
+                              <span class="n">path_prefix</span><span class="o">=</span><span class="n">stack_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">ac_mapper</span><span class="p">:</span>
+
+            <span class="n">ac_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;action_stack&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/actions&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;action&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+
+        <span class="c"># Info</span>
+        <span class="n">info_resource</span> <span class="o">=</span> <span class="n">build_info</span><span class="o">.</span><span class="n">create_resource</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">mapper</span><span class="o">.</span><span class="n">submapper</span><span class="p">(</span><span class="n">controller</span><span class="o">=</span><span class="n">info_resource</span><span class="p">,</span>
+                              <span class="n">path_prefix</span><span class="o">=</span><span class="s">&quot;/{tenant_id}&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">info_mapper</span><span class="p">:</span>
+
+            <span class="n">info_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;build_info&#39;</span><span class="p">,</span>
+                                <span class="s">&#39;/build_info&#39;</span><span class="p">,</span>
+                                <span class="n">action</span><span class="o">=</span><span class="s">&#39;build_info&#39;</span><span class="p">,</span>
+                                <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+        <span class="c"># Software configs</span>
+        <span class="n">software_config_resource</span> <span class="o">=</span> <span class="n">software_configs</span><span class="o">.</span><span class="n">create_resource</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">mapper</span><span class="o">.</span><span class="n">submapper</span><span class="p">(</span>
+            <span class="n">controller</span><span class="o">=</span><span class="n">software_config_resource</span><span class="p">,</span>
+            <span class="n">path_prefix</span><span class="o">=</span><span class="s">&quot;/{tenant_id}/software_configs&quot;</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">sc_mapper</span><span class="p">:</span>
+
+            <span class="n">sc_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;software_config_create&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;create&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+
+            <span class="n">sc_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;software_config_show&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/{config_id}&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;show&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="n">sc_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;software_config_delete&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/{config_id}&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;delete&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;DELETE&#39;</span><span class="p">})</span>
+
+        <span class="c"># Software deployments</span>
+        <span class="n">sd_resource</span> <span class="o">=</span> <span class="n">software_deployments</span><span class="o">.</span><span class="n">create_resource</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">mapper</span><span class="o">.</span><span class="n">submapper</span><span class="p">(</span>
+            <span class="n">controller</span><span class="o">=</span><span class="n">sd_resource</span><span class="p">,</span>
+            <span class="n">path_prefix</span><span class="o">=</span><span class="s">&#39;/{tenant_id}/software_deployments&#39;</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">sa_mapper</span><span class="p">:</span>
+
+            <span class="n">sa_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;software_deployment_index&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;index&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="n">sa_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;software_deployment_metadata&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/metadata/{server_id}&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;metadata&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="n">sa_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;software_deployment_create&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;create&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;POST&#39;</span><span class="p">})</span>
+
+            <span class="n">sa_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;software_deployment_show&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/{deployment_id}&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;show&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;GET&#39;</span><span class="p">})</span>
+
+            <span class="n">sa_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;software_deployment_update&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/{deployment_id}&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;update&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;PUT&#39;</span><span class="p">})</span>
+
+            <span class="n">sa_mapper</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;software_deployment_delete&quot;</span><span class="p">,</span>
+                              <span class="s">&quot;/{deployment_id}&quot;</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s">&quot;delete&quot;</span><span class="p">,</span>
+                              <span class="n">conditions</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;method&#39;</span><span class="p">:</span> <span class="s">&#39;DELETE&#39;</span><span class="p">})</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">API</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../../../index.html">heat 2015.1.dev542.ga481ba9 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../openstack.html" accesskey="U">heat.api.openstack</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,2013 Heat Developers.
+      Last updated on Mon Dec 8 11:11:34 2014, commit a481ba9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
