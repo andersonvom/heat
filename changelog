@@ -1,0 +1,994 @@
+****************************
+Heat Changelog
+Date: 2014-12-08 17:11:34 UTC
+Previous-Version: PRODUCTION
+Current-Version: k1-20141208-gmaster-1197
+****************************
+Commit: ab6bc7a7d5ce1a5de9f8b1896c1f19cc4df5ed08
+Author: Randall Burt
+Date: Fri Oct 24 17:51:22 2014 -0500
+Message: Rackspace cloud monitoring resources
+Change-Id: Ia2b421abca322cb83785c4c42ff1c4f1624d6131
+Gerrit-Review: https://review.openstack.org/#q,Ia2b421abca322cb83785c4c42ff1c4f1624d6131,n,z
+
+Commit: 5bb339d7396f62942714f4339d570af159eafe42
+Author: Randall Burt
+Date: Tue Oct 14 20:00:39 2014 -0500
+Message: Pull account from client url
+Change-Id: I4457d880c868ccd80c2856880bbf89b808a3abe3
+Gerrit-Review: https://review.openstack.org/#q,I4457d880c868ccd80c2856880bbf89b808a3abe3,n,z
+
+Commit: e9def2d1f7da9e4e79240e5b71ca2d3eefcaf5a5
+Author: Randall Burt
+Date: Wed Oct 8 14:06:18 2014 -0500
+Message: Pin clients to known working versions to avoid bugs
+Change-Id: I1003d580a6ea18bdf41ed9957ac48e0649501689
+Gerrit-Review: https://review.openstack.org/#q,I1003d580a6ea18bdf41ed9957ac48e0649501689,n,z
+
+Commit: d7943bcff4df4f90ec7fff78b3c4c768bfc2b0c7
+Author: Randall Burt
+Date: Tue Jun 24 20:10:56 2014 -0500
+Message: Temporarily fix need to have passwords in the context by faking trusts.
+Change-Id: If72aa3c723b2e6f512b12426375e9c1a0bda5582
+Gerrit-Review: https://review.openstack.org/#q,If72aa3c723b2e6f512b12426375e9c1a0bda5582,n,z
+
+Commit: e48ab58e1eabc469ccf774f39be89fd685018e27
+Author: Randall Burt
+Date: Wed Dec 3 17:26:50 2014 -0600
+Message: Restrict docker client version to be compat with CoreOS stable
+Change-Id: If7e94257d0e5097f01a6ce785ed6f64a07eaab83
+Gerrit-Review: https://review.openstack.org/#q,If7e94257d0e5097f01a6ce785ed6f64a07eaab83,n,z
+
+Commit: ed1e56241966096b75e3b832e424d78f5d4fdc11
+Author: Randall Burt
+Date: Thu May 8 15:13:20 2014 -0500
+Message: Revert "Don't use SSH in Rackspace::Cloud::Server"
+
+Commit: 1c0ca39c6200cc086460d30d11cb45c5d57402a7
+Author: Randall Burt
+Date: Wed Nov 26 14:47:13 2014 -0600
+Message: Temporarily use patched build of pyrax to fix monitoring
+Change-Id: I1e5f34b75d7d817fc3d6f64bc840781154cd2fc8
+Gerrit-Review: https://review.openstack.org/#q,I1e5f34b75d7d817fc3d6f64bc840781154cd2fc8,n,z
+
+Commit: 49e2d07ad821804b4567595f809be5e7bfb68173
+Author: Andrew Plunk
+Date: Mon Mar 24 16:34:54 2014 -0500
+Message: Chef solo resource
+Blueprint: chef-solo-resource
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/chef-solo-resource
+
+Commit: 11b2865600c30e0c05caff36a1e91fc42c19d5e9
+Author: Randall Burt
+Date: Thu May 8 12:48:51 2014 -0500
+Message: Add support for AWS resources on Rackspace cloud
+Change-Id: Ie0a70f707f732b96352fb6d7e6c8a44ebe60a8b0
+Gerrit-Review: https://review.openstack.org/#q,Ie0a70f707f732b96352fb6d7e6c8a44ebe60a8b0,n,z
+
+Commit: c7cd3cac68c306ebabbbdd4aeea0a11fa0a05716
+Author: Jason Dunsmore
+Date: Mon Mar 24 11:35:15 2014 -0500
+Message: Vijendar's Rackspace Windows resource
+
+Commit: 694704453e2863ef9c945a0a73bfc4361735ffa3
+Author: Jason Dunsmore
+Date: Thu Aug 7 11:27:32 2014 -0500
+Message: Add local requirements for tarball packaging
+Change-Id: I15456f7fb5c8bea15726c61a4e6b962f7cd1023d
+Gerrit-Review: https://review.openstack.org/#q,I15456f7fb5c8bea15726c61a4e6b962f7cd1023d,n,z
+
+Commit: 3c7e48317172d02ddc3f94047b0f762b282999d0
+Author: Randall Burt
+Date: Wed Jul 30 16:33:41 2014 -0500
+Message: Remove the client plugins that should be replaced by Rackspace ones.
+Change-Id: I929b1c959aae146caf898eb89f61060301622350
+Gerrit-Review: https://review.openstack.org/#q,I929b1c959aae146caf898eb89f61060301622350,n,z
+
+Commit: 17a3b0005d229e24f3f57caafc134ad91069ea37
+Author: OpenStack Proposal Bot
+Date: Mon Dec 8 06:00:52 2014 +0000
+Message: Imported Translations from Transifex
+Change-Id: I1b5c1690779bf1890c85fd40e5abb6835a7fe31f
+Gerrit-Review: https://review.openstack.org/#q,I1b5c1690779bf1890c85fd40e5abb6835a7fe31f,n,z
+
+Commit: 0442b77d5321a61b6b3d95937659e55975dbd036
+Author: OpenStack Proposal Bot
+Date: Fri Dec 5 23:59:59 2014 +0000
+Message: Updated from global requirements
+Change-Id: I3050d7c88196d2426c7e4821b1e504d2f67ecedd
+Gerrit-Review: https://review.openstack.org/#q,I3050d7c88196d2426c7e4821b1e504d2f67ecedd,n,z
+
+Commit: 014bf9d6112af6ac062156d3b8032a8f08e12ba3
+Author: Tetiana Lashchova
+Date: Fri Dec 5 15:21:14 2014 +0200
+Message: Remove i18n import from loguserdata.py
+Closes-bug: 1399642
+Bug-Url: https://bugs.launchpad.net/bugs/1399642
+
+Commit: 7469a929c10be5d8cf03cd78516dbed3c7bacc87
+Author: Peter Razumovsky
+Date: Fri Dec 5 13:03:17 2014 +0300
+Message: Re-factoring os/neutron resolve methods
+Change-Id: I769c0a286d54e4db2bba1a8b0ac0edf1b2024e16
+Gerrit-Review: https://review.openstack.org/#q,I769c0a286d54e4db2bba1a8b0ac0edf1b2024e16,n,z
+
+Commit: 1962b73c82f1782c52baaf30a74afbd1af523ad1
+Author: huangtianhua
+Date: Fri Dec 5 15:16:19 2014 +0800
+Message: Use template directly instead of stack.tmpl
+Change-Id: I856300b896a55bbd33cdc8b465a2bb4a43ea2b39
+Gerrit-Review: https://review.openstack.org/#q,I856300b896a55bbd33cdc8b465a2bb4a43ea2b39,n,z
+
+Commit: 2dcc0f254c75b8b4d3c86e08a5e0cafc54f2b7dc
+Author: Jeremy Stanley
+Date: Fri Dec 5 03:30:36 2014 +0000
+Message: Workflow documentation is now in infra-manual
+Change-Id: I589842db624ca525ec04c6d23fe0b1391fe590d2
+Gerrit-Review: https://review.openstack.org/#q,I589842db624ca525ec04c6d23fe0b1391fe590d2,n,z
+
+Commit: 3ab3ba944c06fad1599a6c3d4e7029365161e07c
+Author: huangtianhua
+Date: Fri Nov 21 16:57:10 2014 +0800
+Message: Apply cinder snapshot custom constraint
+Blueprint: cinder-custom-constraints
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/cinder-custom-constraints
+
+Commit: 6d8a5cb35cec81b23a71e8c6fa692f8e7b4dca1c
+Author: Anderson Mesquita
+Date: Mon Nov 17 17:54:32 2014 -0500
+Message: Expose resource attributes in the engine
+Blueprint: detailed-resource-show
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/detailed-resource-show
+Change-Id: I842eb89ac42de8d525d2092ff9d02e70daa8a981
+Gerrit-Review: https://review.openstack.org/#q,I842eb89ac42de8d525d2092ff9d02e70daa8a981,n,z
+
+Commit: 0c6bff0e7377eb4f6e35c19cbe98748a2827a4e2
+Author: Steven Hardy
+Date: Fri Aug 29 16:40:35 2014 +0100
+Message: Add stack_user_project_id to _create_stack RPC interface
+Blueprint: decouple-nested
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/decouple-nested
+
+Commit: 71540bfa7929330055cd9d921b5c91e683a63e10
+Author: Steven Hardy
+Date: Fri Aug 29 16:19:14 2014 +0100
+Message: engine service add stack_user_project_id to create_stack interface
+Blueprint: decouple-nested
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/decouple-nested
+
+Commit: b3c6fc778afdac256ae688303b974bbd75599ad9
+Author: Peter Razumovsky
+Date: Wed Dec 3 19:43:15 2014 +0300
+Message: Convert x.iteritems() to six.iteritems(x)
+Closes-bug: 1282888
+Bug-Url: https://bugs.launchpad.net/bugs/1282888
+
+Commit: 06491c706f328eb07d4cdef9e37063bf96e02b4f
+Author: huangtianhua
+Date: Thu Dec 4 11:00:57 2014 +0800
+Message: Add serial console url attribute for nova server
+Closes-bug: 1399049
+Bug-Url: https://bugs.launchpad.net/bugs/1399049
+
+Commit: c26201c856d15d64ce243cb06813922400e88345
+Author: huangtianhua
+Date: Tue Dec 2 16:11:34 2014 +0800
+Message: Show the creation time for stack snapshots
+Closes-bug: 1398307
+Bug-Url: https://bugs.launchpad.net/bugs/1398307
+
+Commit: 9d146f489d95c148096e37b986ff7b86964a5cb6
+Author: huangtianhua
+Date: Fri Nov 21 16:54:18 2014 +0800
+Message: Add cinder snapshot custom constraint
+Blueprint: cinder-custom-constraints
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/cinder-custom-constraints
+
+Commit: bc5d34bf5dbf835cdcde7be4a09fc0677568b664
+Author: huangtianhua
+Date: Fri Nov 21 16:16:38 2014 +0800
+Message: Apply cinder volume custom constraint
+Blueprint: cinder-custom-constraints
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/cinder-custom-constraints
+
+Commit: 11dc22a701fd7dbde214360baeb88bc50985d080
+Author: tengqm
+Date: Wed Nov 26 20:01:38 2014 +0800
+Message: Extract group functions into a utility module.
+Blueprint: reorg-asg-code
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/reorg-asg-code
+
+Commit: 4a5419850936c9f0f1652d250680ceb1eb389846
+Author: tengqm
+Date: Sun Nov 30 15:53:59 2014 +0800
+Message: Reduce V1.1 test fakes complexity to below 20
+Change-Id: I7a51beda296a6d7f70d6f3b32695103ba162b3d1
+Gerrit-Review: https://review.openstack.org/#q,I7a51beda296a6d7f70d6f3b32695103ba162b3d1,n,z
+
+Commit: 91d530fc87e0d66d2383fd580ab32da3c08fda00
+Author: Steven Hardy
+Date: Wed Dec 3 21:42:31 2014 +0000
+Message: Revert "Handle error with non existing template file"
+Change-Id: I271780f3ac02030dfde9ba9beb8921dc9211c06d
+Gerrit-Review: https://review.openstack.org/#q,I271780f3ac02030dfde9ba9beb8921dc9211c06d,n,z
+
+Commit: cf0b59953cedb6aeb5d182aa567e2cb928843ca6
+Author: Steven Hardy
+Date: Wed Dec 3 17:44:02 2014 +0000
+Message: Remove heat.config.sample file
+Change-Id: I1c43e5cf2a7ab6fa388b91fd420392996c368e72
+Gerrit-Review: https://review.openstack.org/#q,I1c43e5cf2a7ab6fa388b91fd420392996c368e72,n,z
+
+Commit: 99768809f49e2658dc1d552dafd6f1b659bbb205
+Author: Steven Hardy
+Date: Wed Dec 3 20:34:09 2014 +0000
+Message: Remove config check_uptodate test
+Change-Id: Id4a37e9a5be156fea05c96e385c23da016ea9e69
+Gerrit-Review: https://review.openstack.org/#q,Id4a37e9a5be156fea05c96e385c23da016ea9e69,n,z
+
+Commit: 837a093a24ea6005f1291b954e48cb338fd5a9b4
+Author: Jason Dunsmore
+Date: Wed Dec 3 12:33:10 2014 -0600
+Message: Use physical_resource_name to generate the resource ID
+Closes-bug: 1398927
+Bug-Url: https://bugs.launchpad.net/bugs/1398927
+
+Commit: 869978606c45745578fdc1f7806091470c58e89c
+Author: Anderson Mesquita
+Date: Tue Oct 14 13:40:56 2014 -0300
+Message: Implement handle_check for Rackspace Cloud Servers
+Blueprint: stack-check
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/stack-check
+
+Commit: 44b1774a479dd09935dcdb0a6637741999a97010
+Author: Pratik Mallya
+Date: Tue Oct 28 15:57:29 2014 -0500
+Message: Pass status reason when trove misbehaves
+Closes-bug: 1386899
+Bug-Url: https://bugs.launchpad.net/bugs/1386899
+
+Commit: 3d2b7facdab23181b876b2272f587a2400caadc1
+Author: tengqm
+Date: Tue Dec 2 21:44:12 2014 +0800
+Message: Make all assertEqual() calls conform to convention
+Closes-bug: 1259292
+Bug-Url: https://bugs.launchpad.net/bugs/1259292
+Change-Id: I2e0474d9821716baf35a3bbb2952c63a84749dd3
+Gerrit-Review: https://review.openstack.org/#q,I2e0474d9821716baf35a3bbb2952c63a84749dd3,n,z
+
+Commit: b37062b98def271e7a94014e2c83d5828ab46536
+Author: Angus Salkeld
+Date: Wed Dec 3 13:16:53 2014 +1000
+Message: Add support for pass through references
+Blueprint: env-nested-usability
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/env-nested-usability
+Change-Id: I6016699514e75bd88c27f9f8f7d871b39d31343d
+Gerrit-Review: https://review.openstack.org/#q,I6016699514e75bd88c27f9f8f7d871b39d31343d,n,z
+
+Commit: dacc3cc35fb48f7df1380323a9a800e510e048cc
+Author: Angus Salkeld
+Date: Wed Dec 3 12:07:56 2014 +1000
+Message: Support better access to nested attributes
+Blueprint: env-nested-usability
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/env-nested-usability
+Change-Id: I047794906ae7eb3b72b6cc779c64a9ba6e73e68a
+Gerrit-Review: https://review.openstack.org/#q,I047794906ae7eb3b72b6cc779c64a9ba6e73e68a,n,z
+
+Commit: 65fd9c30e8da48706a97d12b1db8ec8a4e05fbdf
+Author: huangtianhua
+Date: Fri Nov 21 15:43:29 2014 +0800
+Message: Add cinder volume custom constraint
+Blueprint: cinder-custom-constraints
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/cinder-custom-constraints
+
+Commit: 44aa33be9abe0cef38aabfdd0d0885da850cf425
+Author: huangtianhua
+Date: Mon Nov 17 12:56:18 2014 +0800
+Message: Apply nova flavor constraint for resources
+Blueprint: nova-custom-constraints
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/nova-custom-constraints
+
+Commit: 8a56cafe2b99b39d1ad5705b9ad1a85b4781f76e
+Author: huangtianhua
+Date: Thu Nov 13 17:41:07 2014 +0800
+Message: Apply nova server constraints for resources
+Blueprint: nova-custom-constraints
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/nova-custom-constraints
+
+Commit: 6a1ff532f9b8f456a9fe49b989a58a844ee731f9
+Author: Anderson Mesquita
+Date: Tue Dec 2 15:31:04 2014 -0500
+Message: Fix invalid syntax on heat-db-setup
+Closes-bug: 1398535
+Bug-Url: https://bugs.launchpad.net/bugs/1398535
+
+Commit: 4801c0f894b5e58e9b5bf46de31d1de271390eb9
+Author: Tetiana Lashchova
+Date: Tue Dec 2 13:35:38 2014 +0200
+Message: Use the right log marker functions
+Change-Id: Ib9f92ef6696b9a95ddae74f0d4a0a557c06ecc91
+Gerrit-Review: https://review.openstack.org/#q,Ib9f92ef6696b9a95ddae74f0d4a0a557c06ecc91,n,z
+
+Commit: d5c84e5defdaccf6292ad154641a1197f827a949
+Author: Steven Hardy
+Date: Tue Dec 2 12:04:59 2014 +0000
+Message: ResourceGroup allow update of resource_def
+Closes-bug: 1396533
+Bug-Url: https://bugs.launchpad.net/bugs/1396533
+
+Commit: f0cbd934472ceda12aada2253c0d6c477875069c
+Author: Jason Dunsmore
+Date: Wed Nov 19 13:49:05 2014 -0600
+Message: Always import heat.rpc.api as rpc_api
+Change-Id: Ic84ca7fbac7a95eace7f2019c08ee20fa1bc8e5e
+Gerrit-Review: https://review.openstack.org/#q,Ic84ca7fbac7a95eace7f2019c08ee20fa1bc8e5e,n,z
+
+Commit: 9c877f3172fca65619b1b50bd327b30541cdc439
+Author: Peter Razumovsky
+Date: Fri Nov 28 16:18:51 2014 +0300
+Message: Fix error msg invalid stack or res name
+Closes-bug: 1397313
+Bug-Url: https://bugs.launchpad.net/bugs/1397313
+
+Commit: e11ecb4f431eec1c9d0cc248743c28a253b6b541
+Author: tengqm
+Date: Fri Nov 28 16:47:46 2014 +0800
+Message: Fix documentation on Fn::Base64 function
+Closes-bug: 1377323
+Bug-Url: https://bugs.launchpad.net/bugs/1377323
+
+Commit: 5e2ee8a42c3791986bfa9d69b7c6032cccb3252c
+Author: Miguel Grinberg
+Date: Sat Nov 29 00:08:22 2014 +0000
+Message: Populate _template_classes global on first use
+Closes-bug: 1397468
+Bug-Url: https://bugs.launchpad.net/bugs/1397468
+
+Commit: 832eddbe27e12ef25c26bbc789495c406b803652
+Author: Pavlo Shchelokovskyy
+Date: Fri Sep 26 09:45:33 2014 +0300
+Message: Add console_urls attribute to server resource
+Blueprint: vnc-console-attr
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/vnc-console-attr
+
+Commit: 2105d1e3a28cde093edb7836ba716539cbb62f34
+Author: QI ZHANG
+Date: Wed Nov 19 14:50:31 2014 +0800
+Message: Pickup the region name passed in from heatclient
+Closes-bug: 1223068
+Bug-Url: https://bugs.launchpad.net/bugs/1223068
+Change-Id: Ia859e67cf8c6e0d1ed9d9e7f5eab2d138c6421ef
+Gerrit-Review: https://review.openstack.org/#q,Ia859e67cf8c6e0d1ed9d9e7f5eab2d138c6421ef,n,z
+
+Commit: e8a02d646a96b5be66c0b3f49995f4b198f2a4fa
+Author: huangtianhua
+Date: Fri Nov 21 11:46:01 2014 +0800
+Message: Record update_time for suspend/resume/snapshot actions
+Closes-bug: 1385109
+Bug-Url: https://bugs.launchpad.net/bugs/1385109
+
+Commit: 5a8f16b54158db81d6389acb009f6b0e21a7f69a
+Author: OpenStack Proposal Bot
+Date: Thu Nov 27 21:42:15 2014 +0000
+Message: Updated from global requirements
+Change-Id: I334579731599c46ff9cf89cb5c3942d0db7059e0
+Gerrit-Review: https://review.openstack.org/#q,I334579731599c46ff9cf89cb5c3942d0db7059e0,n,z
+
+Commit: 898f94347dc011aba7f2cb03b1ff5d384691aeda
+Author: Peter Razumovsky
+Date: Thu Nov 27 15:16:04 2014 +0300
+Message: Add default_client_name in Nova::FloatingIPAssoc
+Closes-bug: 1396982
+Bug-Url: https://bugs.launchpad.net/bugs/1396982
+
+Commit: 638fd591f03fcbd36ff1baf8ec89748c1614f1ef
+Author: Victor Sergeyev
+Date: Thu Nov 27 12:14:22 2014 +0200
+Message: Fill test database from models description
+Change-Id: Ib7b6ab2591c01e91d7a55f3384dae505fe1485a7
+Gerrit-Review: https://review.openstack.org/#q,Ib7b6ab2591c01e91d7a55f3384dae505fe1485a7,n,z
+
+Commit: 514916125b08097eaf633fb11dbe979af1cf69ae
+Author: Peter Razumovsky
+Date: Thu Nov 27 11:52:58 2014 +0300
+Message: Fix outputs validation place in Stack.validate
+Closes-bug: 1396441
+Bug-Url: https://bugs.launchpad.net/bugs/1396441
+
+Commit: 9b0a940a6f8d06105840ce3139789da133edb560
+Author: huangtianhua
+Date: Wed Oct 22 11:22:02 2014 +0800
+Message: Failed res no need UpdateReplace which has nested_stack
+Closes-bug: 1383618
+Bug-Url: https://bugs.launchpad.net/bugs/1383618
+
+Commit: 0f08d3af6fb10037cd337ff4325b259e24241384
+Author: Peter Razumovsky
+Date: Tue Nov 25 19:16:46 2014 +0300
+Message: Remove ignoring [H302] in tox.ini
+Change-Id: I5049d4108d3fa88fb7214034ddcd77f27bb8e84d
+Gerrit-Review: https://review.openstack.org/#q,I5049d4108d3fa88fb7214034ddcd77f27bb8e84d,n,z
+
+Commit: 7f4cde72b6c83c3b927a0d72ef1de4cf7ae2da57
+Author: Peter Razumovsky
+Date: Tue Nov 25 19:11:31 2014 +0300
+Message: Fix [H302] errors in heat_integrationtests
+Change-Id: I116e55685e1ee11a0c58c9b33c00cfc0e9f42efe
+Gerrit-Review: https://review.openstack.org/#q,I116e55685e1ee11a0c58c9b33c00cfc0e9f42efe,n,z
+
+Commit: 0ef5ce33779dd31e117982ce084e3686767319bc
+Author: Peter Razumovsky
+Date: Tue Nov 18 18:46:59 2014 +0300
+Message: Fix [H302] errors in heat/tests
+Change-Id: Ia7527c6704e61d854be8e847e2401f33fb48d4df
+Gerrit-Review: https://review.openstack.org/#q,Ia7527c6704e61d854be8e847e2401f33fb48d4df,n,z
+
+Commit: 03b3cf777ebab67ccf01c94374856261ad2013ae
+Author: Peter Razumovsky
+Date: Thu Nov 13 15:52:08 2014 +0300
+Message: Fix [H302] errors in heat/engine
+Change-Id: Ib3e1a6f9d5e82e9fb29b000157b57dbc3883b42e
+Gerrit-Review: https://review.openstack.org/#q,Ib3e1a6f9d5e82e9fb29b000157b57dbc3883b42e,n,z
+
+Commit: a041681099de64a3a0527ef5297d166c85a6ed6e
+Author: Thomas Herve
+Date: Tue Nov 25 20:57:32 2014 +0100
+Message: Update Barbican resources to match library changes
+Closes-bug: 1396283
+Bug-Url: https://bugs.launchpad.net/bugs/1396283
+Change-Id: I7a785fd68ffdcda0e622d576a555b3699c706b77
+Gerrit-Review: https://review.openstack.org/#q,I7a785fd68ffdcda0e622d576a555b3699c706b77,n,z
+
+Commit: e59fd874e55b1c762edba7fa6b7628a3d0b8c37b
+Author: Pavlo Shchelokovskyy
+Date: Thu Nov 20 17:06:12 2014 +0200
+Message: Support availability zones in Node Group Templates
+Change-Id: Ic74fd43f5d8c692ddb40d0c6cefa5ed6327dd654
+Gerrit-Review: https://review.openstack.org/#q,Ic74fd43f5d8c692ddb40d0c6cefa5ed6327dd654,n,z
+
+Commit: 184d6856f3e9b5073f7421cd3283afe1357e562e
+Author: Pavlo Shchelokovskyy
+Date: Thu Nov 20 16:55:21 2014 +0200
+Message: Support secgroups in Sahara Node group templates
+Closes-bug: 1379318
+Bug-Url: https://bugs.launchpad.net/bugs/1379318
+
+Commit: fcfdc2891acd1a14b7f73cc738a47b0a9d4d32e1
+Author: Pavlo Shchelokovskyy
+Date: Thu Oct 9 13:49:14 2014 +0300
+Message: Support volume type in Sahara Node Group Template
+Closes-bug: 1369574
+Bug-Url: https://bugs.launchpad.net/bugs/1369574
+
+Commit: 140f32805c28c62300fb3f8a1bd004b5db3d7442
+Author: Ethan Lynn
+Date: Wed Nov 26 10:35:46 2014 +0800
+Message: Fix package name when using heat-db-setup in rhel7
+Closes-bug: 1395726
+Bug-Url: https://bugs.launchpad.net/bugs/1395726
+Change-Id: I02e79a6f8da5bd082568c22d3efc4c231dfbd8c7
+Gerrit-Review: https://review.openstack.org/#q,I02e79a6f8da5bd082568c22d3efc4c231dfbd8c7,n,z
+
+Commit: 846ba6645b505d18d7d928a5dbece886578e3c2b
+Author: tengqm
+Date: Tue Nov 25 22:16:43 2014 +0800
+Message: Fix permission bits for source file.
+Change-Id: If5a3e3523a82fa06d0d164c1e0c6cf9061826d8b
+Gerrit-Review: https://review.openstack.org/#q,If5a3e3523a82fa06d0d164c1e0c6cf9061826d8b,n,z
+
+Commit: 542e8882eb5eb29e44a760de588958ec2ef505bd
+Author: Steve Baker
+Date: Tue Nov 25 11:02:08 2014 +1300
+Message: Use correct IDs when collecting multipart config parts
+Closes-bug: 1395902
+Bug-Url: https://bugs.launchpad.net/bugs/1395902
+
+Commit: 51390e8ba70cc22202e27f972455af66d3dbe779
+Author: Sergey Kraynev
+Date: Mon Nov 24 08:04:12 2014 -0500
+Message: Handle error with non existing template file
+Closes-bug: 1394552
+Bug-Url: https://bugs.launchpad.net/bugs/1394552
+
+Commit: c8b35a23f05b79b07efe762c1bafdf61e7959972
+Author: Peter Razumovsky
+Date: Thu Nov 13 15:00:12 2014 +0300
+Message: Fix [H302] errors in heat/db
+Change-Id: I9afc8f1ec2a9ff1351cde28298470b8bcd807e7a
+Gerrit-Review: https://review.openstack.org/#q,I9afc8f1ec2a9ff1351cde28298470b8bcd807e7a,n,z
+
+Commit: 8e4dbded77b573d65b22532c616fbc5a52d293d8
+Author: OpenStack Proposal Bot
+Date: Mon Nov 24 06:00:55 2014 +0000
+Message: Imported Translations from Transifex
+Change-Id: I8a50bfb455b20c7e47f0becbb7aee2fc012849be
+Gerrit-Review: https://review.openstack.org/#q,I8a50bfb455b20c7e47f0becbb7aee2fc012849be,n,z
+
+Commit: 357d71d02d86b1fddcc098194e4ec056a9c25fec
+Author: Angus Salkeld
+Date: Fri Nov 21 08:51:41 2014 +1000
+Message: Add support for running tests against standalone Heat
+Change-Id: I40990555f072d3e10db704c0f63f19db9c8ed8bf
+Gerrit-Review: https://review.openstack.org/#q,I40990555f072d3e10db704c0f63f19db9c8ed8bf,n,z
+
+Commit: 66e3fc80567c37183218b8cbcb504f112eedebbe
+Author: Angus Salkeld
+Date: Fri Nov 21 08:49:26 2014 +1000
+Message: Add logging fixture to integration tests
+Change-Id: I55bffc4278fc92d4f8eff012acd75c1acb1eddeb
+Gerrit-Review: https://review.openstack.org/#q,I55bffc4278fc92d4f8eff012acd75c1acb1eddeb,n,z
+
+Commit: 222f5c8e4b7aa771c51630fd4b68396657713246
+Author: Peter Razumovsky
+Date: Fri Nov 21 14:16:16 2014 +0000
+Message: Revert "Change RouterGateway resource's name"
+Nonebug: 1394998
+Bug-Url: https://bugs.launchpad.net/bugs/1394998
+
+Commit: d138a7a1eed3c72d90fa0b1e7d29464a13b76164
+Author: Sergey Kraynev
+Date: Fri Nov 21 03:22:14 2014 -0500
+Message: Moving translate same logic in different method
+Change-Id: I9870377fb41e6da1c7ed15d390a82216c4306109
+Gerrit-Review: https://review.openstack.org/#q,I9870377fb41e6da1c7ed15d390a82216c4306109,n,z
+
+Commit: ca6f897498c571b74eb1464704f77bc17e7affec
+Author: tengqm
+Date: Mon Oct 20 21:45:03 2014 +0800
+Message: Further split ASG code.
+Blueprint: reorg-asg-code
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/reorg-asg-code
+
+Commit: 0f368be6b9069d829a7f6b57b39d37d2d5830b44
+Author: Randall Burt
+Date: Wed Nov 19 16:24:17 2014 -0600
+Message: Detect container failure when checking create complete
+Change-Id: I77f56ec544a82e13cd5a00a3adcfde6c0dda822e
+Gerrit-Review: https://review.openstack.org/#q,I77f56ec544a82e13cd5a00a3adcfde6c0dda822e,n,z
+
+Commit: 90f9a0a49d9c035eb721eccb0b49681b0638d446
+Author: Peter Razumovsky
+Date: Thu Nov 13 14:57:22 2014 +0300
+Message: Fix [H302] errors in heat/common
+Change-Id: Id72426a6f921002630ad74ed00166885fb2ddf37
+Gerrit-Review: https://review.openstack.org/#q,Id72426a6f921002630ad74ed00166885fb2ddf37,n,z
+
+Commit: c7ba3770c3c4f9b0f8b2f6647ca43f9bf9db7adf
+Author: Peter Razumovsky
+Date: Thu Nov 20 17:24:17 2014 +0300
+Message: Change RouterGateway resource's name
+Change-Id: I33b589870f26761802de84046281b0c626a9e03c
+Gerrit-Review: https://review.openstack.org/#q,I33b589870f26761802de84046281b0c626a9e03c,n,z
+
+Commit: de603a8d24e547fdee715fbfcb74baeec8fbdad6
+Author: Steven Hardy
+Date: Thu Nov 20 14:02:17 2014 +0000
+Message: Create common stack_create functional test helper
+Change-Id: Ibf4c2f61d1f1936816245178fd8cf794e347de8b
+Gerrit-Review: https://review.openstack.org/#q,Ibf4c2f61d1f1936816245178fd8cf794e347de8b,n,z
+
+Commit: d679feca7a76794894df4edc87bd1c98531f4954
+Author: Steven Hardy
+Date: Thu Nov 20 11:31:55 2014 +0000
+Message: Move common functions into functional test base-class
+Change-Id: I20b5399212a3dde514e0785b1fc91be2c30cba04
+Gerrit-Review: https://review.openstack.org/#q,I20b5399212a3dde514e0785b1fc91be2c30cba04,n,z
+
+Commit: 0b2256e461e275d5eda301a031bc6b868ee3ab58
+Author: Steven Hardy
+Date: Tue Nov 18 16:30:35 2014 +0000
+Message: Add functional test for update of group of provider resources
+Related-bug: 1389499
+Bug-Url: https://bugs.launchpad.net/bugs/1389499
+
+Commit: f96fe31a1c6c1fa5307d9ea7955b016066a09c10
+Author: Steven Hardy
+Date: Tue Nov 18 12:54:50 2014 +0000
+Message: Add functional test for update of provider resource
+Related-bug: 1389499
+Bug-Url: https://bugs.launchpad.net/bugs/1389499
+
+Commit: 76882e696c33d7feabe3a673670f74423ef560c2
+Author: Pierre
+Date: Wed Nov 19 13:32:02 2014 +0100
+Message: Add requirement to SecurityGroup "remote_group_id"
+Change-Id: Icdf698a6d7b5539bbc7c4426aa88250229f795f0
+Gerrit-Review: https://review.openstack.org/#q,Icdf698a6d7b5539bbc7c4426aa88250229f795f0,n,z
+
+Commit: 6dc3f62e887093edb9dfb72fcc33008ef7660834
+Author: OpenStack Proposal Bot
+Date: Thu Nov 20 14:05:21 2014 +0000
+Message: Updated from global requirements
+Change-Id: I358cfce5ec233c17b128d3740d9e104178296ae2
+Gerrit-Review: https://review.openstack.org/#q,I358cfce5ec233c17b128d3740d9e104178296ae2,n,z
+
+Commit: 13435988905df7de2d804ba2201ec08f13f61de6
+Author: Peter Razumovsky
+Date: Thu Nov 13 18:31:46 2014 +0300
+Message: Add Dimensions Default in AWS_CloudWatch_Alarm.yaml
+Closes-bug: 1386824
+Bug-Url: https://bugs.launchpad.net/bugs/1386824
+
+Commit: 5b09e4524a467a4df41ca9e88a571d2bae1ae9b6
+Author: Peter Razumovsky
+Date: Mon Oct 27 17:36:22 2014 +0300
+Message: Correct error msg when resource or output are empty
+Closes-bug: 1386242
+Bug-Url: https://bugs.launchpad.net/bugs/1386242
+
+Commit: 9822e483ca98623d65a6b0614852444bd76c2294
+Author: Steve Baker
+Date: Wed Nov 19 16:41:13 2014 +1300
+Message: Handle remote thrown NotFound RPC exceptions
+Change-Id: I8407e04c0404dd6560273d7d74744b5bb7774520
+Gerrit-Review: https://review.openstack.org/#q,I8407e04c0404dd6560273d7d74744b5bb7774520,n,z
+
+Commit: c4026e942af450a8f405aaaaacc36e27ede7261a
+Author: Angus Salkeld
+Date: Thu Nov 20 12:48:51 2014 +1000
+Message: Fix kwargs going into ResourceDefinition
+Blueprint: external-resources
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/external-resources
+Change-Id: I2a494d34d7eab3df6bf5daa9da15a65ea45bf56c
+Gerrit-Review: https://review.openstack.org/#q,I2a494d34d7eab3df6bf5daa9da15a65ea45bf56c,n,z
+
+Commit: 53664c625ecff521c65a75ba60ec29e8ccfa76a8
+Author: Robert Pothier
+Date: Fri Oct 17 14:53:29 2014 -0400
+Message: Support vnic_type in OS::Neutron::Port
+Blueprint: neutron-resource-add-pci-port
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/neutron-resource-add-pci-port
+
+Commit: 268566b675afaf21910b899c7ce932e0474768d3
+Author: Steven Hardy
+Date: Wed Nov 19 21:35:11 2014 +0000
+Message: RandomString RefId return name with no resource_id
+Partial-bug: 1392359
+Bug-Url: https://bugs.launchpad.net/bugs/1392359
+
+Commit: 218e1038f2828258eaf1e15d85cf074697f851a9
+Author: Steven Hardy
+Date: Wed Nov 19 18:22:57 2014 +0000
+Message: SoftwareDeployments make servers property updateable
+Closes-bug: 1389178
+Bug-Url: https://bugs.launchpad.net/bugs/1389178
+
+Commit: ea7f0144215763b62d35f3ec9bc22bba69256e69
+Author: Steven Hardy
+Date: Wed Nov 12 19:27:36 2014 +0000
+Message: Make ResourceGroup updates update nested stacks
+Closes-bug: 1389499
+Bug-Url: https://bugs.launchpad.net/bugs/1389499
+
+Commit: 02ec693a4701f3423be811a3a5de334c78744465
+Author: Eoghan Glynn
+Date: Wed Nov 19 11:52:38 2014 +0000
+Message: Correctly set CombinationAlarm repeat_actions
+Closes-bug: 1394159
+Bug-Url: https://bugs.launchpad.net/bugs/1394159
+Change-Id: I1335d5664e9f3f408fbe6815d6cd6fd0a75ba1b8
+Gerrit-Review: https://review.openstack.org/#q,I1335d5664e9f3f408fbe6815d6cd6fd0a75ba1b8,n,z
+
+Commit: 32b4988ae5a3720e8a8c6edd2521d1dc659ad971
+Author: Steven Hardy
+Date: Tue Nov 18 16:12:54 2014 +0000
+Message: StackResource consider files in implementation_signature
+Partial-bug: 1389499
+Bug-Url: https://bugs.launchpad.net/bugs/1389499
+
+Commit: f5221feb8bf9066b1a9cf078f224f8b00cacb5fc
+Author: Steven Hardy
+Date: Tue Nov 18 11:51:12 2014 +0000
+Message: Move implementation_signature to StackResource
+Partial-bug: 1389499
+Bug-Url: https://bugs.launchpad.net/bugs/1389499
+
+Commit: 5e9f6dbcbd45cf9e3cfde28f3233b85785a95bb5
+Author: OpenStack Proposal Bot
+Date: Wed Nov 19 06:01:03 2014 +0000
+Message: Imported Translations from Transifex
+Change-Id: I22573ae6b9db0f072a10d49fa1774567d81e1f0c
+Gerrit-Review: https://review.openstack.org/#q,I22573ae6b9db0f072a10d49fa1774567d81e1f0c,n,z
+
+Commit: dcc7fd112f51ae721b02646b9a3a0b57c53e6a0a
+Author: Steve Baker
+Date: Wed Nov 19 11:16:00 2014 +1300
+Message: Fix and assert calls to update_software_deployment
+Change-Id: I5a2b8a10fd7be6e9728d28b1894067f07102dad9
+Gerrit-Review: https://review.openstack.org/#q,I5a2b8a10fd7be6e9728d28b1894067f07102dad9,n,z
+
+Commit: 550683b8af0d229e90ae80adb687a2980bc98e40
+Author: Steve Baker
+Date: Fri Nov 14 13:14:54 2014 +1300
+Message: Include group argument in calls to create_software_config
+Closes-bug: 1392327
+Bug-Url: https://bugs.launchpad.net/bugs/1392327
+
+Commit: c9e338929bdf40b6d155d6873da6624a10cbdd12
+Author: OpenStack Proposal Bot
+Date: Tue Nov 18 19:39:01 2014 +0000
+Message: Updated from global requirements
+Change-Id: I45ba9a7dc5a4575654363c5722b777f6ce5e4068
+Gerrit-Review: https://review.openstack.org/#q,I45ba9a7dc5a4575654363c5722b777f6ce5e4068,n,z
+
+Commit: b025e2d2242954668030126e6f79151151123e12
+Author: huangtianhua
+Date: Wed Oct 22 15:48:26 2014 +0800
+Message: Don't stop create immediately on error for stack resources
+Closes-bug: 1383645
+Bug-Url: https://bugs.launchpad.net/bugs/1383645
+
+Commit: c1aa3d7a4d817daad53dd8e009ed5ccb144531dc
+Author: Peter Razumovsky
+Date: Thu Nov 13 14:56:37 2014 +0300
+Message: Fix [H302] errors in heat/cloudinit
+Change-Id: If9100574f091d23c9ae9e0bca94ab16fd4b535ec
+Gerrit-Review: https://review.openstack.org/#q,If9100574f091d23c9ae9e0bca94ab16fd4b535ec,n,z
+
+Commit: ef1ff217ede69f3609d5581f9a883e085091f937
+Author: Jason Dunsmore
+Date: Mon Oct 13 16:35:38 2014 -0500
+Message: Make Cloud Loadbalancer properties updatable
+Closes-bug: 1382665
+Bug-Url: https://bugs.launchpad.net/bugs/1382665
+
+Commit: f97f2e7644ddda874b1ac2e5f5cecd59923ac0ea
+Author: Steven Hardy
+Date: Tue Nov 18 16:36:47 2014 +0000
+Message: Functional tests skip volume_create_backup_restore
+Partial-bug: 1382300
+Bug-Url: https://bugs.launchpad.net/bugs/1382300
+
+Commit: 201d20836178df12c65bd9398befe288d0f1bb6b
+Author: Anderson Mesquita
+Date: Fri Nov 14 11:17:19 2014 -0500
+Message: Remove duplication on stack resource operations
+Change-Id: Ie923516d11307fc5efdbfbe728fb842137915b28
+Gerrit-Review: https://review.openstack.org/#q,Ie923516d11307fc5efdbfbe728fb842137915b28,n,z
+
+Commit: 0a60386f64e77c8d81522c78bf4f35f14873a48a
+Author: Oleksii Chuprykov
+Date: Fri Oct 10 16:46:27 2014 +0300
+Message: Add ModelSMigrationSync classes
+Blueprint: db-sync-models-with-migrations
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/db-sync-models-with-migrations
+Change-Id: Ia007a3b218302f9462b152fa98ad177c4cfff24d
+Gerrit-Review: https://review.openstack.org/#q,Ia007a3b218302f9462b152fa98ad177c4cfff24d,n,z
+
+Commit: 02c4b2441e12ed12fa58ddd9858b5d91314668ee
+Author: Steven Hardy
+Date: Fri Nov 14 15:10:57 2014 +0000
+Message: RandomString don't skip superclass validation
+Closes-bug: 1392754
+Bug-Url: https://bugs.launchpad.net/bugs/1392754
+
+Commit: 6de626950f9e341f778415001ef8b68a3c330c51
+Author: Zhenguo Niu
+Date: Tue Nov 18 14:35:23 2014 +0800
+Message: Import sqlalchemy module instead of classes
+Change-Id: If7ef3a9e403ee4fa59dc9caf020751debde2d065
+Gerrit-Review: https://review.openstack.org/#q,If7ef3a9e403ee4fa59dc9caf020751debde2d065,n,z
+
+Commit: 38e7ad70e09843e6114ff1223a59bdd50efd9aa4
+Author: Oleksii Chuprykov
+Date: Fri Oct 10 16:12:13 2014 +0300
+Message: Alter models and add migration
+Blueprint: db-sync-models-with-migrations
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/db-sync-models-with-migrations
+Change-Id: Iabc4aced0a95e29cea9c48abc4c31be98e8ff9b1
+Gerrit-Review: https://review.openstack.org/#q,Iabc4aced0a95e29cea9c48abc4c31be98e8ff9b1,n,z
+
+Commit: 776ecc7f50ffb8dea8abec4e8791522ab22fa9b2
+Author: huangtianhua
+Date: Mon Nov 17 17:00:53 2014 +0800
+Message: Move ImageConstraintTest to test_glance_client.py
+Change-Id: I5cccd344a9c8decbea6638a780607f16d7895354
+Gerrit-Review: https://review.openstack.org/#q,I5cccd344a9c8decbea6638a780607f16d7895354,n,z
+
+Commit: 44ac01bb762f9af62602ae4c4f1466d1f2b3828c
+Author: Steven Hardy
+Date: Fri Nov 14 14:49:52 2014 +0000
+Message: RandomString physical_resource_id as id not the string
+Closes-bug: 1392359
+Bug-Url: https://bugs.launchpad.net/bugs/1392359
+
+Commit: c0f8529dabbf064bb582d5b10e032070f90ccc89
+Author: Steven Hardy
+Date: Mon Nov 17 21:00:12 2014 +0000
+Message: Update sample conf for new oslo.db release
+Closes-bug: 1393559
+Bug-Url: https://bugs.launchpad.net/bugs/1393559
+
+Commit: d73107bd35cadcad0b4933aec43ef0313b961a45
+Author: Steven Hardy
+Date: Mon Nov 17 17:38:32 2014 +0000
+Message: ResourceGroup don't special-case zero count
+Closes-bug: 1392796
+Bug-Url: https://bugs.launchpad.net/bugs/1392796
+
+Commit: ddcdd1f77f85f08e2b2ce372a31b0590dc3634cf
+Author: Peter Razumovsky
+Date: Thu Nov 13 14:51:34 2014 +0300
+Message: Fix [H302] errors in heat/api
+Change-Id: I1eee89a1ff1b011031cde89c5daa660735bf1eb1
+Gerrit-Review: https://review.openstack.org/#q,I1eee89a1ff1b011031cde89c5daa660735bf1eb1,n,z
+
+Commit: 9ed0d2729c32cced920ec149fa3379ebeacdf340
+Author: huangtianhua
+Date: Thu Nov 13 17:07:08 2014 +0800
+Message: Remove KeypairConstraint and FlavorConstraint to nova.py
+Blueprint: nova-custom-constraints
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/nova-custom-constraints
+
+Commit: 7804859d7e841af5f5e4e4b76fd06d8a89f83b1c
+Author: huangtianhua
+Date: Wed Nov 12 17:22:40 2014 +0800
+Message: Implement custom constraint for nova server
+Blueprint: nova-custom-constraints
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/nova-custom-constraints
+
+Commit: 0c284f7debb1b5175bb2f5693a5488f6fa49b19d
+Author: Jason Dunsmore
+Date: Fri Nov 14 15:16:16 2014 -0600
+Message: Handle 404 and 409 response when deleting containers
+Closes-bug: 1392867
+Bug-Url: https://bugs.launchpad.net/bugs/1392867
+
+Commit: 72d0313fab470534d2cffb6c7b8a6c311d68740c
+Author: ZHU ZHU
+Date: Thu Nov 13 04:39:04 2014 -0600
+Message: Fix incorrect ca argument for heat ceilometer client
+Closes-bug: 1391792
+Bug-Url: https://bugs.launchpad.net/bugs/1391792
+Change-Id: Ib32dfede0ece78bc39e0cab213cb51df8eb62eb6
+Gerrit-Review: https://review.openstack.org/#q,Ib32dfede0ece78bc39e0cab213cb51df8eb62eb6,n,z
+
+Commit: 73cc28fbdbe31a7f859cf0674b660f45f6da06bf
+Author: Ethan Lynn
+Date: Tue Nov 11 17:16:19 2014 +0800
+Message: Correct error message when query domain id
+Partial-bug: 1376213
+Bug-Url: https://bugs.launchpad.net/bugs/1376213
+Change-Id: Id39ee6d4acca82c908b690c748609ed1125012eb
+Gerrit-Review: https://review.openstack.org/#q,Id39ee6d4acca82c908b690c748609ed1125012eb,n,z
+
+Commit: 09bc7ad79e4d95cffd8db19c781dc66230640d84
+Author: Doug Fish
+Date: Wed Nov 12 17:29:40 2014 -0600
+Message: Use environment file in template-validate
+Closes-bug: 1388985
+Bug-Url: https://bugs.launchpad.net/bugs/1388985
+
+Commit: 9467686c6e7d6c22a40fd4bec7d16a2e5527c73c
+Author: ChangBo Guo(gcb)
+Date: Wed Nov 12 11:03:30 2014 +0800
+Message: Remove unused module excutils
+Partial-bug: 1380629
+Bug-Url: https://bugs.launchpad.net/bugs/1380629
+Change-Id: I73ef120aa2c432a55c781875a1dc8f8ff2054f98
+Gerrit-Review: https://review.openstack.org/#q,I73ef120aa2c432a55c781875a1dc8f8ff2054f98,n,z
+
+Commit: 9aa35e0860c4f2e5bd7c0f8ee79f7e30379fb940
+Author: ChangBo Guo(gcb)
+Date: Wed Nov 12 10:54:52 2014 +0800
+Message: Remove unused module processutils
+Partial-bug: 1380629
+Bug-Url: https://bugs.launchpad.net/bugs/1380629
+
+Commit: e2abd00fad02a37a5890b4c6d285fb93aa6a7163
+Author: Anderson Mesquita
+Date: Thu Oct 23 14:41:36 2014 -0300
+Message: Implement handle_check for Cinder and EC2 Volumes
+Blueprint: stack-check
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/stack-check
+
+Commit: c2b2ef6ae41b716ed64d98436458c211ef1c0875
+Author: Anderson Mesquita
+Date: Mon Oct 20 18:24:28 2014 -0300
+Message: Implement handle_check for OS::Nova::KeyPair
+Blueprint: stack-check
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/stack-check
+Change-Id: I2091df2eb6d8b4fa05fbeb07c6e92d95131b8e0b
+Gerrit-Review: https://review.openstack.org/#q,I2091df2eb6d8b4fa05fbeb07c6e92d95131b8e0b,n,z
+
+Commit: e3afba009b715a61cf5e5952373ad706456dd85b
+Author: Anderson Mesquita
+Date: Mon Oct 20 18:17:31 2014 -0300
+Message: Implement handle_check for OS::Swift::Container
+Blueprint: stack-check
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/stack-check
+Change-Id: I1821c8067a5cf41b2100ab500ce7cfbe6fadeb34
+Gerrit-Review: https://review.openstack.org/#q,I1821c8067a5cf41b2100ab500ce7cfbe6fadeb34,n,z
+
+Commit: 9b866bf8cb01c21d322e9abddda9ac163ae939b9
+Author: Anderson Mesquita
+Date: Tue Oct 14 16:57:05 2014 -0300
+Message: Implement handle_check for OS::Trove::Instance
+Blueprint: stack-check
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/stack-check
+Change-Id: Idf694cbe9119c268fb27cdc090d0edff7e4a3607
+Gerrit-Review: https://review.openstack.org/#q,Idf694cbe9119c268fb27cdc090d0edff7e4a3607,n,z
+
+Commit: b26edacb6b8cb5f2ae619072839e88ca5d4ed3cf
+Author: Anderson Mesquita
+Date: Tue Oct 14 13:32:38 2014 -0300
+Message: Implement handle_check for OS::Nova::Server
+Blueprint: stack-check
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/stack-check
+Change-Id: Ie2f5805c7b482ee00a3ad53fef1994bb9df51e45
+Gerrit-Review: https://review.openstack.org/#q,Ie2f5805c7b482ee00a3ad53fef1994bb9df51e45,n,z
+
+Commit: 430e2056a2f33c6c29af2f3a56a5b98fd36dcec7
+Author: Anderson Mesquita
+Date: Wed Oct 8 14:14:57 2014 -0700
+Message: Implement handle_check for CloudWatch
+Blueprint: stack-check
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/stack-check
+Change-Id: I974a68cc5df6baaa1f0ad594a758747773e52373
+Gerrit-Review: https://review.openstack.org/#q,I974a68cc5df6baaa1f0ad594a758747773e52373,n,z
+
+Commit: f21406cc77b9e73ddfd1e87d804fb992e19c4c37
+Author: Anderson Mesquita
+Date: Thu Oct 16 09:14:11 2014 -0300
+Message: Make resource check messages more consistent
+Blueprint: stack-check
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/stack-check
+
+Commit: cf1557624ee65658ac3d82c096eaa4d64907abfd
+Author: Peter Razumovsky
+Date: Thu Nov 6 14:59:25 2014 +0300
+Message: Improve error response in cfn Outputs validation
+Change-Id: I2a16093a57b474ef4636975b5fc0df4103678a08
+Gerrit-Review: https://review.openstack.org/#q,I2a16093a57b474ef4636975b5fc0df4103678a08,n,z
+
+Commit: e16036cd2ded2b0295120bd0eb7d830a71749206
+Author: Thomas Herve
+Date: Wed Apr 30 16:10:07 2014 +0200
+Message: Add snapshot restore HTTP API
+Blueprint: stack-snapshot
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/stack-snapshot
+Change-Id: Id1ec0c11c9f12c23b3eec12a853db6ee4ff90277
+Gerrit-Review: https://review.openstack.org/#q,Id1ec0c11c9f12c23b3eec12a853db6ee4ff90277,n,z
+
+Commit: 2edded25b216e0c160b6c2b60e1c95d0ddc29b08
+Author: huangtianhua
+Date: Mon Nov 3 15:27:44 2014 +0800
+Message: Correct validation for timeout when rolling update
+Closes-bug: 1388695
+Bug-Url: https://bugs.launchpad.net/bugs/1388695
+
+Commit: 4fd5087499b0f3dae16b183eba825e642efb0e95
+Author: Miguel Grinberg
+Date: Fri Oct 10 16:02:41 2014 -0700
+Message: unconfigured clients look in the [clients] section for defaults
+Closes-bug: 1379958
+Bug-Url: https://bugs.launchpad.net/bugs/1379958
+
+Commit: b7a19caa25ec955bc551d35c2e1951c982900659
+Author: Pavlo Shchelokovskyy
+Date: Fri Aug 22 17:36:47 2014 +0300
+Message: Implement update of AWS::EC2::SecurityGroup rules
+Blueprint: handle-update-for-security-groups
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/handle-update-for-security-groups
+
+Commit: 076a86e34396847f05b78abf1f9174d8fa13694c
+Author: Steven Hardy
+Date: Fri Aug 22 16:51:53 2014 +0100
+Message: Add user_creds_id to _create_stack RPC interface
+Blueprint: decouple-nested
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/decouple-nested
+
+Commit: febe92a44d21df54e97d5e5243ae8bacc4b0799c
+Author: Steven Hardy
+Date: Fri Aug 22 16:38:30 2014 +0100
+Message: engine service add user_creds_id to create_stack interface
+Blueprint: decouple-nested
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/decouple-nested
+
+Commit: ae4ab1e1ff1b6f91ab4cf6c0ca6727e64b413891
+Author: Steven Hardy
+Date: Fri Aug 22 16:03:57 2014 +0100
+Message: StackResource add show_deleted option to nested() accessor method
+Blueprint: decouple-nested
+Blueprint-Url: https://blueprints.launchpad.net/heat/+spec/decouple-nested
+
